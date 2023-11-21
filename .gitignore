@@ -51,3 +51,4 @@ piloting/.DS_Store
 .DS_Store
 piloting/data
 piloting/output
+*.stswp

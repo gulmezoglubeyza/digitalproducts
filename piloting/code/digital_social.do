@@ -2,8 +2,7 @@ clear all
 label drop _all
 set scheme tab2
 
-cd "/Users/leolab/Dropbox/normal_lab/projects/digitaltraps"
-local png_stub "output/figures/pilots/digital_social/first5"
+local png_stub "output/figures/prolific/first5"
 
 ***** Load and prepare
 // insheet using "data/raw/prolific/digital_social/digital-social_November 9, 2023_08.10.csv", names clear
