@@ -2,33 +2,33 @@ clear all
 label drop _all
 set scheme tab2
 
-local png_stub "output/figures/prolific/digital_social_categories"
+local png_stub "output/figures/prolific/digital_social_categories/first5"
 
 ***** Load and prepare
-insheet using "/Users/leolab/Downloads/digital-social-categories_December 5, 2023_15.05.csv", names clear
+insheet using "/Users/leolab/Downloads/digital-social-categories_December 5, 2023_14.48.csv", names clear // with rankings
 
 drop in 1/2
 drop if status == "Survey Preview" 	
 drop if strpos(consent, "NOT")
 destring *, replace
 
-rename _network_digital_1 v71
-rename _interaction_digital_1 v72
-rename _selfcontrol_digital v73
-rename _minutes_digital v74
-rename _time_digital v75
-rename _wta_digital v76
+rename _network_digital_1 v72
+rename _interaction_digital_1 v73
+rename _selfcontrol_digital v74
+rename _minutes_digital v75
+rename _time_digital v76
+rename _wta_digital v77
 
-rename _network_physical_1 v309
-rename _interaction_physical_1 v310
-rename _selfcontrol_physical v311
-rename _time_physical v312
-rename _wta_physical v313
+rename _network_physical_1 v311
+rename _interaction_physical_1 v312
+rename _selfcontrol_physical v313
+rename _time_physical v314
+rename _wta_physical v315
 
 * loop over variable names that are in groups of 4 from 1 to 50,
 forvalues i = 1/26 {
 	
-	local j = 71 + (`i'-1)*6
+	local j = 72 + (`i'-1)*6
 	local k = `j' + 1
 	local l = `j' + 2
 	local m = `j' + 3
@@ -46,7 +46,7 @@ forvalues i = 1/26 {
 * and from 51 to 100
 forvalues i = 27/66 {
 	
-	local j = 309 + (`i'-27)*5
+	local j = 311 + (`i'-27)*5
 	local k = `j' + 1
 	local l = `j' + 2
 	local m = `j' + 3
@@ -75,7 +75,26 @@ forvalues i = 27/66 {
 	
 }
 
-******* RESHAPE DATA AND PREPARE PLOT VARIABLES
+
+**** Step 1: Keep only observations that appeared in the first 5 in the loop
+
+rename usage_month_digital_do  order_digital
+rename usage_month_physical_do order_physical
+
+keep responseid usage* without* network* interaction*  selfcontrol* minutes* time* wta* gender age order_*
+reshape long usage without network interaction selfcontrol minutes time wta, i(responseid) j(product) string 
+
+// br responseid platform order_platform
+split order_digital, parse("|") gen(order_) // split into new variables for each platform
+egen first5platforms = concat(order_1 order_2 order_3 order_4 order_5), punct("|") // create new variable containing the first 5
+replace first5platforms = subinstr(first5platforms, "Facebook Messenger", "Messenger", .)
+
+split order_physical, parse("|") gen(order_) // split into new variables for each platform
+egen first5platforms = concat(order_1 order_2 order_3 order_4 order_5), punct("|") // create new variable containing the first 5
+replace first5platforms = subinstr(first5platforms, "Facebook Messenger", "Messenger", .)
+
+
+******* Step 2: RESHAPE DATA AND PREPARE PLOT VARIABLES
 
 missings dropvars, force
 reshape long usage without network interaction selfcontrol minutes time  wta, i(responseid) j(product) string 
@@ -116,12 +135,6 @@ gen category = 1 if inrange(product, 1, 26)
 replace category = 2 if inrange(product, 27, 66)
 label define categorylbl 1 "Digital" 2 "Non-Digital"
 label values category categorylbl
-
-* Define social vs non social for digital products
-generate social_platform = 0 if category == 1
-replace social_platform = 1 if inlist(product, 2, 4, 24, 25)
-label define socialplatform_lbl 0 "Individual" 1 "Social"
-label values social_platform socialplatform_lbl 
 
 * Usage
 gen uses_product = 0 
@@ -189,26 +202,25 @@ tab category if uses_product == 100
 
 corr without_n social if category == 1
 corr without_n social if category == 2
-corr social pos_int
 
 ********** OUTPUT GRAPHS
 
 *** usage
 	
 graph hbar uses_product if category == 1, over(product, label(labsize(tiny))) ///
-	ytitle(Usage (%), size(medium)) ///
+	ytitle(Platform usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
 graph export "`png_stub'/usage_by_product_digital.png", replace	
 
 graph hbar uses_product if category == 2, over(product, label(labsize(tiny))) ///
-	ytitle(Usage (%), size(medium)) ///
+	ytitle(Platform usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
 graph export "`png_stub'/usage_by_product_nondigital.png", replace	
 
 cibar uses_product, over(category) ///
-	gr(ytitle(Usage (%), size(medlarge)) ///
+	gr(ytitle(Platform usage (%), size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
 	legend(size(medlarge))) ///
@@ -232,22 +244,6 @@ cibar without_n, over(uses_product category) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medium)
 graph export "`png_stub'/live_without_by_category_usage.png", replace	
-
-cibar without_n if category == 1, over(social_platform) ///
-	gr(ytitle(Prefers world without (%), size(large)) ///
-	ylabel(0(20)100, labsize(medlarge)) ///
-	xlabel(, labsize(medlarge) valuelabel nogrid) ///
-	legend(size(medlarge))) ///
-	barlabel(on) blposition(12) blsize(medium)
-graph export "`png_stub'/live_without_digital_by_social.png", replace	
-
-cibar without_n if category == 1, over(uses_product social_platform) ///
-	gr(ytitle(Prefers world without (%), size(large)) ///
-	ylabel(0(20)100, labsize(medlarge)) ///
-	xlabel(, labsize(medlarge) valuelabel nogrid) ///
-	legend(size(medlarge))) ///
-	barlabel(on) blposition(12) blsize(medium)
-graph export "`png_stub'/live_without_digital_by_social_usage.png", replace	
 
 cibar without_n, over(social category) ///
 	gr(ytitle(Prefers world without (%), size(large)) ///
@@ -293,7 +289,7 @@ graph export "`png_stub'/network_by_category.png", replace
 **** interactions
 
 graph hbar pos_int if category == 1, over(product, label(labsize(vsmall))) ///
-	ytitle(Positive interactions (%), size(medium)) ///
+	ytitle(Positive interactions on 'social' platforms (%), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
 graph export "`png_stub'/positivenetwork_by_product_digital.png", replace	
@@ -311,7 +307,7 @@ graph hbar pos_int if category == 1 & social == 100, over(product, label(labsize
 graph export "`png_stub'/positivenetwork_by_product_socialdigital.png", replace	
 
 graph hbar pos_int if category == 2 & social == 100, over(product, label(labsize(tiny))) ///
-	ytitle(Positive interactions on 'social' platforms (%), size(medium)) ///
+	ytitle(Positive interactions (%), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
 graph export "`png_stub'/positivenetwork_by_product_socialnondigital.png", replace	
@@ -330,7 +326,7 @@ cibar pos_int, over(social category) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
 	barlabel(on)  blposition(12) blsize(medlarge)		
-graph export "`png_stub'/positivenetwork_by_category_social.png", replace			
+graph export "`png_stub'/positivenetwork_by_category.png", replace			
 
 **** time
 graph hbar time if category == 1, over(product, label(labsize(tiny))) ///
