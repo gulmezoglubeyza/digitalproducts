@@ -4,76 +4,76 @@ clear all
 label drop _all
 set scheme tab2
 
-local png_stub "output/figures/prolific/digital_physical"
+local png_stub "output/figures/prolific/digital_social_category"
 
 ***** Load and prepare
 // insheet using "/Users/leolab/Downloads/digital-products_November 22, 2023_08.05.csv", names clear // first round of collection
 
-insheet using "/Users/leolab/Downloads/digital-products_November 27, 2023_08.24.csv", names clear
+insheet using "/Users/leolab/Downloads/digital-social-categories_December 5, 2023_10.43.csv", names clear
 
 drop in 1/2
 drop if status == "Survey Preview" 	
 drop if strpos(consent, "NOT")
 destring *, replace
-drop minutes_per_day
 
-rename _minutes_digital v119
-rename _time_digital v120
-rename _selfcontrol_digital v121
-rename _wta_digital v122
-rename _fomo_digital v123
-rename _network_digital v124
+rename _network_digital_1 v71
+rename _interaction_digital_1 v72
+rename _selfcontrol_digital v73
+rename _minutes_digital v74
+rename _time_digital v75
+rename _wta_digital v76
 
-rename _time_physical v519
-rename _selfcontrol_physical v520
-rename _wta_physical v521
-rename _fomo_physical v522
-rename _network_physical v523
+rename _network_physical_1 v309
+rename _interaction_physical_1 v310
+rename _selfcontrol_physical v311
+rename _time_physical v312
+rename _wta_physical v313
 
 * loop over variable names that are in groups of 4 from 1 to 50,
-forvalues i = 1/50 {
+forvalues i = 1/26 {
 	
-	local j = 119 + (`i'-1)*6
+	local j = 71 + (`i'-1)*6
 	local k = `j' + 1
 	local l = `j' + 2
 	local m = `j' + 3
 	local n = `j' + 4
 	local o = `j' + 5
 	
-	rename v`j' minutes`i'
-	rename v`k' time`i'
+	rename v`j' network`i'
+	rename v`k' interaction`i'
 	rename v`l' selfcontrol`i'
-	rename v`m' wta`i'
-	rename v`n' fomo`i'	
-	rename v`o' network`i'	
+	rename v`m' minutes`i'
+	rename v`n' time`i'	
+	rename v`o' wta`i'	
 }
 
 * and from 51 to 100
-forvalues i = 51/100 {
+forvalues i = 27/66 {
 	
-	local j = 519 + (`i'-51)*5
+	local j = 309 + (`i'-27)*5
 	local k = `j' + 1
 	local l = `j' + 2
 	local m = `j' + 3
 	local n = `j' + 4
 	
-	rename v`j' time`i'
-	rename v`k' selfcontrol`i'
-	rename v`l' wta`i'
-	rename v`m' fomo`i'	
-	rename v`n' network`i'	
+	rename v`j' network`i'
+	rename v`k' interaction`i'
+	rename v`l' selfcontrol`i'
+	rename v`m' time`i'	
+	rename v`n' wta`i'	
 }
 
-forvalues i = 1/50 {
+forvalues i = 1/26 {
 	
 	rename usage_month_digital_`i' usage`i'
 	rename without_digital_`i' without`i'
 	
 }
 
-forvalues i = 51/100 {
+forvalues i = 27/66 {
 	
-	local j = `i' - 50
+	local j = `i' - 26
+	
 	rename usage_month_physical_`j' usage`i'
 	rename without_physical_`j' without`i'
 	
@@ -82,49 +82,29 @@ forvalues i = 51/100 {
 ******* RESHAPE DATA AND PREPARE PLOT VARIABLES
 
 missings dropvars, force
-reshape long usage without minutes time selfcontrol wta fomo network, i(responseid) j(product) string 
+reshape long usage without network interaction selfcontrol minutes time  wta, i(responseid) j(product) string 
 
 destring product, replace
 tab product
 
 program label_products
 	
-	label define productlbl  1 "Temu" 2 "ReelShort" 3 "Lapse" ///
-	4 "TikTok" 5 "ChatGPT" 6 "Google" 7 "CapCut" 8 "YouTube" 9 "Instagram" ///
-	10 "SHEIN" 11 "HBO Max" 12 "Gmail" 13 "WhatsApp" 14 "Facebook" ///
-	15 "Google Maps" 16 "Walmart" 17 "Peacock TV" 18 "Telegram Messenger" ///
-	19 "Snapchat" 20 "Threads" 21 "Amazon Shopping" 22 "Spotify" ///
-	23 "Cash App" 24 "Netflix" 25 "Google Chrome" 26 "Impulse" ///
-	27 "starmatch" 28 "Microsoft Authenticator" 29 "Pinterest" 30 "Uber" ///
-	31 "Target" 32 "Messenger" 33 "McDonald's" 34 "Capital One Shopping" ///
-	35 "DoorDash" 36 "Reddit" 37 "The Roku App" 38 "Shop" ///
-	39 "Amazon Prime Video" 40 "Ticketmaster" 41 "Discord" 42 "Nike" ///
-	43 "Duolingo" 44 "GoWish" 45 "Google Photos" 46 "PayPal" ///
-	47 "Life360" 48 "Lemon8" 49 "Disney+" 50 "Domino's Pizza USA" ///
-	51 "Petroleum Products" 52 "Automobiles" 53 "Smartphones" ///
-	54 "Pharmaceuticals" 55 "Consumer Electronics" ///
-	56 "Fashion Apparel" 57 "Health Supplements" ///
-	58 "Cosmetics" 59 "Air Travel" ///
-	60 "Plastic Products" 61 "Furniture" ///
-	62 "Games" 63 "Agricultural Products" ///
-	64 "Medical Devices" 65 "Electric Kitchen Appliances" ///
-	66 "Sportswear" 67 "Home Appliances" ///
-	68 "Jewelry" 69 "Hairstyling Tools" ///
-	70 "Footwear" 71 "Books" ///
-	72 "Sports Equipment" 73 "Musical Instruments" ///
-	74 "Baby Products" 75 "Power Tools" ///
-	76 "Office Supplies" 77 "Tobacco Products" ///
-	78 "Fine Art" 79 "Paints and Coatings" ///
-	80 "Bicycles" 81 "Luxury Goods" ///
-	82 "Gardening Equipment" 83 "Stationery Products" ///
-	84 "Leather Goods" 85 "Pet Products" ///
-	86 "Watches" 87 "Cleaning Products" ///
-	88 "Glass Products" 89 "Party Supplies" ///
-	90 "Bedding and Linens" 91 "Camping Gear" ///
-	92 "Perfumes and Fragrances" 93 "Batteries" 94 "Mattresses" ///
-	95 "Fitness Equipment" 96 "Photographic Equipment" ///
-	97 "Natural Gas" 98 "Towels" ///
-	99 "Kitchenware" 100 "Firearms and Ammunition"
+	label define productlbl  1 "E-commerce Platforms" 2 "Social Media Platforms" 3 "Streaming Platforms" ///
+	4 "Messaging and Communication Platforms" 5 "Video and Photo Editing Apps" 6 "Music and Audio Streaming Platforms" ///
+	7 "Financial Service Platforms" 8 "Digital Security Tools" 9 "Mobile and Video Games" 10 "Online News Platforms" ///
+	11 "Event Tickets and Resale Platforms" 12 "Online Food Delivery Apps" 13 "Ride-sharing Apps" 14 "Cloud Storage Services" ///
+	15 "Navigation Apps" 16 "Work-Related Apps" 17 "Fitness Apps" 18 "Meditation Apps" 19 "Online Education Platforms" ///
+	20 "Personal Productivity Apps" 21 "Travel and Tourism Apps" 22 "Food and Cooking Apps" 23 "Shopping and Fashion Apps" ///
+	24 "Dating and Relationship Apps" 25 "Professional Networking and Career Apps" 26 "Book Reading Apps" 27 "Suits" ///
+	28 "Watches" 29 "Jewelry" 30 "Sportswear" 31 "Footwear" 32 "Textbooks and Encyclopedias" 33 "Computers" ///
+	34 "Tobacco products" 35 "Hair products" 36 "Dental and shaving products" 37 "Deodorant and sanitary products" ///
+	38 "Electric personal care appliances" 39 "Cosmetic products" 40 "Cologne/Perfume" 41 "Stationary products" ///
+	42 "Luggage" 43 "Infants' equipment" 44 "Televisions" 45 "Audio recorders and speakers" 46 "Pet supplies" ///
+	47 "Sports vehicles" 48 "Boats" 49 "Bicycles" 50 "Sports equipment" 51 "Hunting, fishing and camping gear" ///
+	52 "Film and photographic supplies" 53 "Toys" 54 "Tabletop games" 55 "Music instruments" 56 "Club dues/fees" ///
+	57 "Movie theaters" 58 "Theater plays" 59 "Concerts" 60 "Sporting events" 61 "Newspapers and magazines" ///
+	62 "Books" 63 "Automobiles" 64 "Commercial flights" 65 "Intercity bus travel" 66 "Intercity train travel"
+
 
 	label values product productlbl
 end
@@ -135,16 +115,10 @@ label_products
 drop if missing(usage)
 
 * Generate categories: digital vs physical
-gen category = 1 if inrange(product, 1, 50)
-replace category = 2 if inrange(product, 51, 100)
+gen category = 1 if inrange(product, 1, 26)
+replace category = 2 if inrange(product, 27, 66)
 label define categorylbl 1 "Digital" 2 "Non-Digital"
 label values category categorylbl
-
-* Distinguish between social and individual digital platforms
-generate social = 2 if category == 1 // values are reversed to keep labeling consistent with previous code
-replace social = 1 if inlist(product, 2, 4, 9, 13, 14, 18, 19, 20, 29, 32, 36, 41, 48)
-label define sociallbl 1 "Social" 2 "Individual" 
-label values social sociallbl 
 
 * Usage
 gen uses_product = 0 
@@ -158,6 +132,22 @@ replace without_n = 100 if without == "World  without"
 label define without_lbl 0 "With" 100 "Without"
 label values without_n without_lbl
 
+* Network
+gen network_n = .
+replace network_n = 1 if network == "Strongly disagree"
+replace network_n = 2 if network == "Somewhat disagree"
+replace network_n = 3 if network == "Neither agree nor disagree"
+replace network_n = 4 if network == "Somewhat agree"
+replace network_n = 5 if network == "Strongly agree"
+
+sum network_n, d
+local median = r(p50)
+generate social = cond(network_n > `median', 100, 0)
+replace social = . if missing(network_n)
+
+label define networklbl 0 "Network Effects" 100 "Network Effects"
+label values social networklbl
+
 * Self control
 gen selfcontrol_n = .
 replace selfcontrol_n = 0 if regexm(selfcontrol, "including")
@@ -165,19 +155,6 @@ replace selfcontrol_n = 100 if regexm(selfcontrol, "except")
 label define selfcontrol_lbl 0 "Self control" 100 "No self control"
 label values selfcontrol_n selfcontrol_lbl
 
-* Fomo
-gen fomo_n = .
-replace fomo_n = 100 if regexm(fomo, "worse")
-replace fomo_n = 0 if !regexm(fomo, "worse")
-label define fomolbl 0 "No FOMO" 100 "FOMO"
-label values fomo_n fomolbl
-
-* Network
-gen network_n = .
-replace network_n = 0 if network == "Yes"
-replace network_n = 100 if network == "No"
-label define networklbl 0 "Network Effects" 100 "Network Effects"
-label values network_n networklbl
 
 preserve
 	contract product, freq(product_frequency)
