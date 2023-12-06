@@ -5,7 +5,7 @@ set scheme tab2
 local png_stub "output/figures/prolific/digital_social_categories"
 
 ***** Load and prepare
-insheet using "/Users/leolab/Downloads/digital-social-categories_December 5, 2023_15.05.csv", names clear
+insheet using "data/raw/prolific/digital_social_categories/digital-social-categories_December 6, 2023_10.10.csv", names clear
 
 drop in 1/2
 drop if status == "Survey Preview" 	
@@ -193,8 +193,7 @@ corr social pos_int
 
 ********** OUTPUT GRAPHS
 
-*** usage
-	
+*** usage	
 graph hbar uses_product if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle(Usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
@@ -216,7 +215,6 @@ cibar uses_product, over(category) ///
 graph export "`png_stub'/usage_by_category.png", replace	
 
 *** without
-
 cibar without_n, over(category) ///
 	gr(ytitle(Prefers world without (%), size(large)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
@@ -291,7 +289,6 @@ cibar social, over(category) ///
 graph export "`png_stub'/network_by_category.png", replace			
 
 **** interactions
-
 graph hbar pos_int if category == 1, over(product, label(labsize(vsmall))) ///
 	ytitle(Positive interactions (%), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
@@ -396,6 +393,7 @@ cibar selfcontrol_n, over(category) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medlarge)	
 graph export "`png_stub'/selfcontrol_by_category.png", replace		
+
 cibar selfcontrol_n if category == 1, over(social) ///
 	gr(ytitle(Self control problems (%), size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
@@ -408,16 +406,16 @@ graph export "`png_stub'/selfcontrol_digital_by_social.png", replace
 replace wta = 1000 if wta > 1000
 
 graph hbar wta if category == 1, over(product, label(labsize(tiny))) ///
-	ytitle(Self control problems (%), size(medium)) ///
+	ytitle(WTA to deactivate (USD), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
 graph export "`png_stub'/wta_by_product_digital.png", replace	
 
 graph hbar wta if category == 2, over(product, label(labsize(tiny))) ///
-	ytitle(Self control problems (%), size(medium)) ///
+	ytitle(WTA to deactivate (USD), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
-graph export "`png_stub'/wta_nondigital.png", replace	
+graph export "`png_stub'/wta_by_product_nondigital.png", replace	
 
 cibar wta, over(category) ///
 	gr(ytitle(WTA to deactivate (USD), size(medlarge)) ///
