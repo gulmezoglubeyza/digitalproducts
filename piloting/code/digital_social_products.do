@@ -2,73 +2,68 @@ clear all
 label drop _all
 set scheme tab2
 
-local png_stub "output/figures/prolific/digital_social_categories"
+local png_stub "output/figures/prolific/digital_social_products"
 
 ***** Load and prepare
-insheet using "data/raw/prolific/digital_social_categories/digital-social-categories_December 6, 2023_10.10.csv", names clear
+insheet using "/Users/leolab/Downloads/digital-social-products_December 7, 2023_15.15.csv", names clear
 
 drop in 1/2
 drop if status == "Survey Preview" 	
 drop if strpos(consent, "NOT")
 destring *, replace
 
-rename _network_digital_1 v71
-rename _interaction_digital_1 v72
-rename _selfcontrol_digital v73
-rename _minutes_digital v74
-rename _time_digital v75
-rename _wta_digital v76
+rename _interaction_digital_1 v137
+rename _selfcontrol_digital v138
+rename _minutes_digital v139
+rename _time_digital v140
+rename _wta_digital v141
 
-rename _network_physical_1 v309
-rename _interaction_physical_1 v310
-rename _selfcontrol_physical v311
-rename _time_physical v312
-rename _wta_physical v313
+rename _interaction_physical_1 v588
+rename _selfcontrol_physical v589
+rename _time_physical v590
+rename _wta_physical v591
 
 * loop over variable names that are in groups of 4 from 1 to 50,
-forvalues i = 1/26 {
+forvalues i = 1/59 {
 	
-	local j = 71 + (`i'-1)*6
+	local j = 137 + (`i'-1)*5
 	local k = `j' + 1
 	local l = `j' + 2
 	local m = `j' + 3
 	local n = `j' + 4
-	local o = `j' + 5
 	
-	rename v`j' network`i'
-	rename v`k' interaction`i'
-	rename v`l' selfcontrol`i'
-	rename v`m' minutes`i'
-	rename v`n' time`i'	
-	rename v`o' wta`i'	
+	rename v`j' interaction`i'
+	rename v`k' selfcontrol`i'
+	rename v`l' minutes`i'
+	rename v`m' time`i'	
+	rename v`n' wta`i'	
+	
 }
 
 * and from 51 to 100
-forvalues i = 27/66 {
+forvalues i = 60/136 {
 	
-	local j = 309 + (`i'-27)*5
+	local j = 588 + (`i'-60)*4
 	local k = `j' + 1
 	local l = `j' + 2
 	local m = `j' + 3
-	local n = `j' + 4
 	
-	rename v`j' network`i'
-	rename v`k' interaction`i'
-	rename v`l' selfcontrol`i'
-	rename v`m' time`i'	
-	rename v`n' wta`i'	
+	rename v`j' interaction`i'
+	rename v`k' selfcontrol`i'
+	rename v`l' time`i'	
+	rename v`m' wta`i'	
 }
 
-forvalues i = 1/26 {
+forvalues i = 1/59 {
 	
 	rename usage_month_digital_`i' usage`i'
 	rename without_digital_`i' without`i'
 	
 }
 
-forvalues i = 27/66 {
+forvalues i = 60/136 {
 	
-	local j = `i' - 26
+	local j = `i' - 59
 	
 	rename usage_month_physical_`j' usage`i'
 	rename without_physical_`j' without`i'
@@ -78,50 +73,79 @@ forvalues i = 27/66 {
 ******* RESHAPE DATA AND PREPARE PLOT VARIABLES
 
 missings dropvars, force
-reshape long usage without network interaction selfcontrol minutes time  wta, i(responseid) j(product) string 
+reshape long usage without interaction selfcontrol minutes time  wta, i(responseid) j(product) string 
 
 destring product, replace
 tab product
 
 program label_products
 	
-	label define productlbl  1 "E-commerce Platforms" 2 "Social Media Platforms" 3 "Streaming Platforms" ///
-	4 "Messaging and Communication Platforms" 5 "Video and Photo Editing Apps" 6 "Music and Audio Streaming Platforms" ///
-	7 "Financial Service Platforms" 8 "Digital Security Tools" 9 "Mobile and Video Games" 10 "Online News Platforms" ///
-	11 "Event Tickets and Resale Platforms" 12 "Online Food Delivery Apps" 13 "Ride-sharing Apps" 14 "Cloud Storage Services" ///
-	15 "Navigation Apps" 16 "Work-Related Apps" 17 "Fitness Apps" 18 "Meditation Apps" 19 "Online Education Platforms" ///
-	20 "Personal Productivity Apps" 21 "Travel and Tourism Apps" 22 "Food and Cooking Apps" 23 "Shopping and Fashion Apps" ///
-	24 "Dating and Relationship Apps" 25 "Professional Networking and Career Apps" 26 "Book Reading Apps" 27 "Suits" ///
-	28 "Watches" 29 "Jewelry" 30 "Sportswear" 31 "Footwear" 32 "Textbooks and Encyclopedias" 33 "Computers" ///
-	34 "Tobacco products" 35 "Hair products" 36 "Dental and shaving products" 37 "Deodorant and sanitary products" ///
-	38 "Electric personal care appliances" 39 "Cosmetic products" 40 "Cologne/Perfume" 41 "Stationary products" ///
-	42 "Luggage" 43 "Infants' equipment" 44 "Televisions" 45 "Audio recorders and speakers" 46 "Pet supplies" ///
-	47 "Sports vehicles" 48 "Boats" 49 "Bicycles" 50 "Sports equipment" 51 "Hunting, fishing and camping gear" ///
-	52 "Film and photographic supplies" 53 "Toys" 54 "Tabletop games" 55 "Music instruments" 56 "Club dues/fees" ///
-	57 "Movie theaters" 58 "Theater plays" 59 "Concerts" 60 "Sporting events" 61 "Newspapers and magazines" ///
-	62 "Books" 63 "Automobiles" 64 "Commercial flights" 65 "Intercity bus travel" 66 "Intercity train travel"
-
-
+	label define productlbl  1 "Facebook" 2 "Pinterest" 3 "Instagram" 4 "LinkedIn" 5 "Twitter" ///
+	6 "Snapchat" 7 "YouTube" 8 "WhatsApp" 9 "Reddit" 10 "TikTok" 11 "Nextdoor" 12 "Messenger" ///
+	13 "Telegram Messenger" 14 "Amazon Shopping" 15 "eBay" 16 "HBO Max" 17 "CapCut" ///
+	18 "Adobe Premiere Rush" 19 "Spotify" 20 "Apple Music" 21 "Cash App" 22 "PayPal" ///
+	23 "Microsoft Authenticator" 24 "LastPass" 25 "Clash of Clans" 26 "Candy Crush Saga" ///
+	27 "BBC News" 28 "Buzzfeed" 29 "Ticketmaster" 30 "Eventbrite" 31 "DoorDash" 32 "UberEats" ///
+	33 "Uber" 34 "Lyft" 35 "Dropbox" 36 "Google Drive" 37 "Google Maps" 38 "Apple Maps" ///
+	39 "Microsoft Office" 40 "Slack" 41 "MyFitnessPal" 42 "Strava" 43 "Headspace" 44 "Calm" ///
+	45 "Duolingo" 46 "Khan Academy" 47 "Evernote" 48 "Trello" 49 "Airbnb" 50 "Booking.com" ///
+	51 "Allrecipes Dinner Spinner" 52 "Yummly" 53 "Temu" 54 "SHEIN" 55 "Tinder" 56 "Bumble" ///
+	57 "Indeed" 58 "Kindle" 59 "Audible" 60 "Hugo Boss suits" 61 "Nordstrom suits" 62 "Tiffany & Co. jewelry" ///
+	63 "Ray-Ban sunglasses" 64 "Nike sportswear" 65 "Old Navy sportswear" 66 "Nike sneakers" ///
+	67 "Timberland boots" 68 "Oxford University Press textbooks" 69 "Britannica encyclopedias" ///
+	70 "MacBook computers" 71 "Dell computers" 72 "Marlboro tobacco" 73 "Montecristo cigars" ///
+	74 "Pantene shampoos" 75 "GHD hair straighteners" 76 "Oral-B toothbrushes" 77 "Gillette razors" ///
+	78 "Nivea deodorants" 79 "Philips electric shavers" 80 "Dyson hair dryers" 81 "MAC lipsticks" ///
+	82 "Clinique moisturizers" 83 "Chanel No. 5 perfumes" 84 "Dior Sauvage colognes" 85 "Moleskine notebooks" ///
+	86 "Pilot G2 pens" 87 "Samsonite luggages" 88 "Herschel backpacks" 89 "Graco strollers" ///
+	90 "Dr. Brown's baby bottles" 91 "Samsung TVs" 92 "LG TVs" 93 "JBL speakers" 94 "Bose speakers" ///
+	95 "Purina pet food" 96 "KONG dog toys" 97 "ATV sports vehicles" 98 "Sea-Doo personal watercrafts" ///
+	99 "Bayliner boats" 100 "Boston Whaler boats" 101 "Trek bicycles" 102 "E-bicycles" 103 "Wilson tennis racquets" ///
+	104 "Callaway golf clubs" 105 "Cabela's hunting gear" 106 "Bass Pro Shops fishing gear" 107 "Kodak films" ///
+	108 "Canon cameras" 109 "LEGO toys" 110 "Fisher-Price toys" 111 "Monopoly games" 112 "UNO card games" ///
+	113 "Gibson guitars" 114 "Yamaha pianos" 115 "YMCA club memberships" 116 "Planet Fitness gym memberships" ///
+	117 "AMC Theatres tickets" 118 "Regal Cinemas tickets" 119 "Broadway musical tickets" ///
+	120 "Stand-up comedy show tickets" 121 "Live Nation tickets" 122 "Ticketmaster tickets" ///
+	123 "FIFA World Cup events" 124 "Super Bowl events" 125 "The New York Times newspapers" ///
+	126 "National Geographic magazines" 127 "novels" 128 "nonfiction books" 129 "Toyota automobiles" ///
+	130 "Maserati sports cars" 131 "American Airlines commercial flight tickets" 132 "Business class flight tickets" ///
+	133 "Greyhound intercity bus tickets" 134 "Megabus intercity bus tickets" 135 "Amtrak intercity train tickets" ///
+	136 "public transportation tickets"
+	
 	label values product productlbl
+	
 end
 
 label_products
 
 * Keep only observations with answers
 drop if missing(usage)
-drop if product == 56 //"Club dues/fees", incorrect phrasing (Club memberships)
+drop if product == 122
 
 * Generate categories: digital vs physical
-gen category = 1 if inrange(product, 1, 26)
-replace category = 2 if inrange(product, 27, 66)
+gen category = 1 if inrange(product, 1, 59)
+replace category = 2 if inrange(product, 60, 136)
 label define categorylbl 1 "Digital" 2 "Non-Digital"
 label values category categorylbl
 
 * Define social vs non social for digital products
 generate social_platform = 0 if category == 1
-replace social_platform = 1 if inlist(product, 2, 4, 24, 25)
-label define socialplatform_lbl 0 "Individual" 1 "Social"
+replace social_platform = 1 if inlist(product, 1, 2, 3, 4, 5, 6, 8, ///
+								9, 10, 11, 12, 13, 19, 20, 21, 22, ///
+								25, 26, 29, 30, 33, 34,40, 41, 42, ///
+								43, 44, 45, 47, 48, 49, 50, 51, 52, ///
+								55, 56, 57, 58, 59)
+
+label define socialplatform_lbl 0 "Non-Social" 1 "Social"
 label values social_platform socialplatform_lbl 
+
+* Define social media
+generate social_media = 0 if social_platform == 1
+replace social_media = 1 if inlist(product, 1, 2, 3, 4, 5, 6, 8, ///
+								9, 10, 11, 12)
+
+label define socialmedia_lbl 0 "Other social platforms" 1 "Social media"
+label values social_media socialmedia_lbl 
 
 * Usage
 gen uses_product = 0 
@@ -134,22 +158,6 @@ gen without_n = 0
 replace without_n = 100 if without == "World  without"
 label define without_lbl 0 "With" 100 "Without"
 label values without_n without_lbl
-
-* Network
-gen network_n = .
-replace network_n = 1 if network == "Strongly disagree"
-replace network_n = 2 if network == "Somewhat disagree"
-replace network_n = 3 if network == "Neither agree nor disagree"
-replace network_n = 4 if network == "Somewhat agree"
-replace network_n = 5 if network == "Strongly agree"
-
-sum network_n, d
-local median = r(p50)
-generate social = cond(network_n > `median', 100, 0)
-replace social = . if missing(network_n)
-
-label define networklbl 0 "No network effects" 100 "Network effects"
-label values social networklbl
 
 * Interactions
 gen interactions_n = .
@@ -164,8 +172,6 @@ generate pos_int = cond(regexm(interaction, "ositive"), 100, 0)
 replace pos_int = . if missing(interaction)
 label define positivelbl 0 "Not positive" 100 "Positive"
 label values pos_int positivelbl
-tab pos_int
-tab interaction
 
 * Self control
 gen selfcontrol_n = .
@@ -185,28 +191,46 @@ preserve
 	sum product_frequency
 restore	
 
-tab category if uses_product == 100
+preserve
+	keep if uses_product == 100 & category == 1
+	contract product, freq(product_frequency)
+	sum product_frequency
+restore	
 
-corr without_n social if category == 1
-corr without_n social if category == 2
-corr social pos_int
+preserve
+	keep if uses_product == 100 & category == 2
+	contract product, freq(product_frequency)
+	sum product_frequency
+restore	
+
+tab category if uses_product == 100
+tab product 
+tab product if uses_product == 100
 
 ********** OUTPUT GRAPHS
 
 *** usage	
-graph hbar uses_product if category == 1, over(product, label(labsize(tiny))) ///
+graph hbar uses_product if category == 1, over(product, label(labsize(half_tiny))) ///
 	ytitle(Usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
 graph export "`png_stub'/usage_by_product_digital.png", replace	
 
-graph hbar uses_product if category == 2, over(product, label(labsize(tiny))) ///
+graph hbar uses_product if category == 2, over(product, label(labsize(half_tiny))) ///
 	ytitle(Usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
 graph export "`png_stub'/usage_by_product_nondigital.png", replace	
 
 cibar uses_product, over(category) ///
+	gr(ytitle(Usage (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
+graph export "`png_stub'/usage_by_category.png", replace	
+
+cibar uses_product if social_platform == 1, over(social_media) ///
 	gr(ytitle(Usage (%), size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
@@ -232,7 +256,7 @@ cibar without_n, over(uses_product category) ///
 graph export "`png_stub'/live_without_by_category_usage.png", replace	
 
 cibar without_n if category == 1, over(social_platform) ///
-	gr(ytitle(Prefers world without (%), size(large)) ///
+	gr(ytitle("Digital Products:" "Prefers world without (%)", size(large)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
@@ -240,53 +264,54 @@ cibar without_n if category == 1, over(social_platform) ///
 graph export "`png_stub'/live_without_digital_by_social.png", replace	
 
 cibar without_n if category == 1, over(uses_product social_platform) ///
-	gr(ytitle(Prefers world without (%), size(large)) ///
+	gr(ytitle("Digital Products:" "Prefers world without (%)", size(large)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medium)
 graph export "`png_stub'/live_without_digital_by_social_usage.png", replace	
 
-cibar without_n, over(social category) ///
-	gr(ytitle(Prefers world without (%), size(large)) ///
+cibar without_n if social_platform == 1, over(social_media) ///
+	gr(ytitle("Social Platforms:" "Prefers world without (%)", size(large)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medium)
-graph export "`png_stub'/live_without_by_category_social.png", replace	
+graph export "`png_stub'/live_without_digital_by_social_socialmedia.png", replace	
 
-graph hbar without_n if category == 1, over(product, label(labsize(tiny))) ///
+cibar without_n if social_platform == 1, over(uses_product social_media) ///
+	gr(ytitle("Social Platforms:" "Prefers world without (%)", size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/live_without_digital_by_social_socialmedia_usage.png", replace	
+
+graph hbar without_n if category == 1, over(product, label(labsize(half_tiny))) ///
 	ytitle(Prefers world without (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
 graph export "`png_stub'/live_without_by_product_digital.png", replace	
 
-graph hbar without_n if category == 2, over(product, label(labsize(tiny))) ///
+graph hbar without_n if category == 1, ///
+	over(uses_product, label(labsize(half_tiny))) ///
+	over(product, label(labsize(half_tiny))) ///
+	ytitle(Prefers world without (%), size(medium)) ///
+	ylabel(0(20)100, labsize(medsmall)) ///
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
+graph export "`png_stub'/live_without_by_product_usage_digital.png", replace	
+
+graph hbar without_n if category == 1 & uses_product == 100, over(product, label(labsize(half_tiny))) ///
+	ytitle(Prefers world without (%)- Users, size(medium)) ///
+	ylabel(0(20)100, labsize(medsmall)) ///
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
+graph export "`png_stub'/live_without_by_product_digital_users.png", replace	
+
+graph hbar without_n if category == 2, over(product, label(labsize(half_tiny))) ///
 	ytitle(Prefers world without (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
 graph export "`png_stub'/live_without_by_product_nondigital.png", replace	
-
-**** network
-graph hbar social if category == 1, over(product, label(labsize(vsmall))) ///
-	ytitle(Network Effects (%), size(medium)) ///
-	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
-graph export "`png_stub'/network_by_product_digital.png", replace	
-
-graph hbar social if category == 2, over(product, label(labsize(tiny))) ///
-	ytitle(Network Effects (%), size(medium)) ///
-	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/network_by_product_nondigital.png", replace	
-
-cibar social, over(category) ///
-	gr(ytitle(Network Effects (%), size(medlarge)) ///
-	ylabel(0(20)100, labsize(medlarge)) ///
-	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
-	legend(size(medlarge))) ///
-	barlabel(on)  blposition(12) blsize(medlarge)		
-graph export "`png_stub'/network_by_category.png", replace			
 
 **** interactions
 graph hbar pos_int if category == 1, over(product, label(labsize(vsmall))) ///
@@ -301,17 +326,11 @@ graph hbar pos_int if category == 2, over(product, label(labsize(tiny))) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
 graph export "`png_stub'/positivenetwork_by_product_nondigital.png", replace	
 
-graph hbar pos_int if category == 1 & social == 100, over(product, label(labsize(vsmall))) ///
+graph hbar pos_int if category == 1 & social_platform == 1, over(product, label(labsize(vsmall))) ///
 	ytitle(Positive interactions on 'social' platforms (%), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
 graph export "`png_stub'/positivenetwork_by_product_socialdigital.png", replace	
-
-graph hbar pos_int if category == 2 & social == 100, over(product, label(labsize(tiny))) ///
-	ytitle(Positive interactions on 'social' platforms (%), size(medium)) ///
-	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/positivenetwork_by_product_socialnondigital.png", replace	
 
 cibar pos_int, over(category) ///
 	gr(ytitle(Positive interactions (%), size(medlarge)) ///
@@ -321,14 +340,22 @@ cibar pos_int, over(category) ///
 	barlabel(on)  blposition(12) blsize(medlarge)		
 graph export "`png_stub'/positivenetwork_by_category.png", replace			
 
-cibar pos_int, over(social category) ///
-	gr(ytitle(Positive interactions (%), size(medlarge)) ///
+cibar pos_int if category == 1, over(social_platform) ///
+	gr(ytitle("Digital products:" "Positive interactions (%)", size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
 	barlabel(on)  blposition(12) blsize(medlarge)		
-graph export "`png_stub'/positivenetwork_by_category_social.png", replace			
-
+graph export "`png_stub'/positivenetwork_digital_by_social.png", replace			
+			
+cibar pos_int if social_platform == 1, over(social_media) ///
+	gr(ytitle("Social platforms:" "Positive interactions (%)", size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on)  blposition(12) blsize(medlarge)		
+graph export "`png_stub'/positivenetwork_digital_by_social.png", replace									
+			
 **** time
 graph hbar time if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle("Average usage per month" "(Days)", size(medium)) ///
@@ -357,7 +384,7 @@ graph hbar minutes if category == 1, over(product, label(labsize(tiny))) ///
 	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
 graph export "`png_stub'/minutes_by_product_digital.png", replace	
 
-cibar minutes if category == 1, over(social) ///
+cibar minutes if category == 1, over(social_platform) ///
 	gr(ytitle("Average usage per day" "(Minutes)", size(medlarge)) ///
 	ylabel(, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
@@ -365,7 +392,7 @@ cibar minutes if category == 1, over(social) ///
 	barlabel(on) blposition(12) blsize(medlarge)	
 graph export "`png_stub'/minutes_by_social.png", replace	
 
-cibar minutes if category == 1, over(without_n social) ///
+cibar minutes if category == 1, over(without_n social_platform) ///
 	gr(ytitle("Average usage per day" "(Minutes)", size(medlarge)) ///
 	ylabel(, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
@@ -385,7 +412,6 @@ graph hbar selfcontrol_n if category == 2, over(product, label(labsize(tiny))) /
 	ylabel(, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
 graph export "`png_stub'/selfcontrol_by_product_nondigital.png", replace		
-	
 cibar selfcontrol_n, over(category) ///
 	gr(ytitle(Self control problems (%), size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
@@ -394,7 +420,7 @@ cibar selfcontrol_n, over(category) ///
 	barlabel(on) blposition(12) blsize(medlarge)	
 graph export "`png_stub'/selfcontrol_by_category.png", replace		
 
-cibar selfcontrol_n if category == 1, over(social) ///
+cibar selfcontrol_n if category == 1, over(social_platform) ///
 	gr(ytitle(Self control problems (%), size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///

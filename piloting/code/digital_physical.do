@@ -241,6 +241,18 @@ cibar without_n if category == 1, over(uses_product social) ///
 	barlabel(on) blposition(12) blsize(medium)
 graph export "`png_stub'/live_without_digital_by_social_usage.png", replace	
 
+graph hbar without_n if category == 1, over(product, label(labsize(tiny))) ///
+	ytitle("Live without (%)", size(medium)) ///
+	ylabel(, labsize(medsmall)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
+
+cibar without_n if category == 1, over(product uses_product) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+
 **** time
 graph hbar time if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle("Average usage per month" "(Days)", size(medium)) ///
