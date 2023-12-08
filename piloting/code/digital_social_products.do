@@ -5,7 +5,7 @@ set scheme tab2
 local png_stub "output/figures/prolific/digital_social_products"
 
 ***** Load and prepare
-insheet using "/Users/leolab/Downloads/digital-social-products_December 7, 2023_15.15.csv", names clear
+insheet using "data/raw/prolific/digital_social_products/digital-social-products_December 8, 2023_10.18.csv", names clear
 
 drop in 1/2
 drop if status == "Survey Preview" 	
@@ -142,7 +142,7 @@ label values social_platform socialplatform_lbl
 * Define social media
 generate social_media = 0 if social_platform == 1
 replace social_media = 1 if inlist(product, 1, 2, 3, 4, 5, 6, 8, ///
-								9, 10, 11, 12)
+								9, 10, 11)
 
 label define socialmedia_lbl 0 "Other social platforms" 1 "Social media"
 label values social_media socialmedia_lbl 
@@ -203,6 +203,19 @@ preserve
 	sum product_frequency
 restore	
 
+preserve
+	keep if uses_product == 100 & social_platform == 1 & social_media == 0
+	contract product, freq(product_frequency)
+	sum product_frequency
+restore	
+
+preserve
+	keep if uses_product == 100 & social_platform == 1 & social_media == 1
+	contract product, freq(product_frequency)
+	sum product_frequency
+restore	
+
+
 tab category if uses_product == 100
 tab product 
 tab product if uses_product == 100
@@ -210,17 +223,19 @@ tab product if uses_product == 100
 ********** OUTPUT GRAPHS
 
 *** usage	
-graph hbar uses_product if category == 1, over(product, label(labsize(half_tiny))) ///
+graph hbar uses_product if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle(Usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/usage_by_product_digital.png", replace	
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/usage_by_product_digital.png", width(1000) height(1500) replace	
 
-graph hbar uses_product if category == 2, over(product, label(labsize(half_tiny))) ///
+graph hbar uses_product if category == 2, over(product, label(labsize(tiny))) ///
 	ytitle(Usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/usage_by_product_nondigital.png", replace	
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/usage_by_product_nondigital.png", width(1000) height(1500) replace	
 
 cibar uses_product, over(category) ///
 	gr(ytitle(Usage (%), size(medlarge)) ///
@@ -230,13 +245,21 @@ cibar uses_product, over(category) ///
 	barlabel(on) blposition(12) blsize(medlarge)
 graph export "`png_stub'/usage_by_category.png", replace	
 
+cibar uses_product if category == 1, over(social_platform) ///
+	gr(ytitle(Usage (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
+graph export "`png_stub'/usage_digital_by_social.png", replace	
+
 cibar uses_product if social_platform == 1, over(social_media) ///
 	gr(ytitle(Usage (%), size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medlarge)
-graph export "`png_stub'/usage_by_category.png", replace	
+graph export "`png_stub'/usage_social_by_socialmedia.png", replace	
 
 *** without
 cibar without_n, over(category) ///
@@ -287,50 +310,63 @@ cibar without_n if social_platform == 1, over(uses_product social_media) ///
 	barlabel(on) blposition(12) blsize(medium)
 graph export "`png_stub'/live_without_digital_by_social_socialmedia_usage.png", replace	
 
-graph hbar without_n if category == 1, over(product, label(labsize(half_tiny))) ///
+// graph hbar without_n if category == 1, ///
+// 	over(uses_product, label(labsize(half_tiny))) ///
+// 	over(product, label(labsize(tiny))) ///
+// 	ytitle(Prefers world without (%), size(medium)) ///
+// 	ylabel(0(20)100, labsize(medsmall)) ///
+// 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))  ///
+// 	xsize(10cm) ysize(20cm) 
+// graph export "`png_stub'/live_without_by_product_usage_digital.png",  width(1000) height(1500) replace	
+
+graph hbar without_n if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle(Prefers world without (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/live_without_by_product_digital.png", replace	
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/live_without_digital_byproduct.png", replace	
 
-graph hbar without_n if category == 1, ///
-	over(uses_product, label(labsize(half_tiny))) ///
-	over(product, label(labsize(half_tiny))) ///
+graph hbar without_n if category == 2, over(product, label(labsize(tiny))) ///
 	ytitle(Prefers world without (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/live_without_by_product_usage_digital.png", replace	
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))  ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/live_without_nondigital_by_product.png",  width(1000) height(1500) replace	
 
-graph hbar without_n if category == 1 & uses_product == 100, over(product, label(labsize(half_tiny))) ///
+graph hbar without_n if category == 1 & uses_product == 100, over(product, label(labsize(tiny))) ///
 	ytitle(Prefers world without (%)- Users, size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/live_without_by_product_digital_users.png", replace	
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))  ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/live_without_digital_byproduct_users.png", replace	
 
-graph hbar without_n if category == 2, over(product, label(labsize(half_tiny))) ///
+graph hbar without_n if category == 2 & uses_product == 100, over(product, label(labsize(tiny))) ///
 	ytitle(Prefers world without (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
 	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/live_without_by_product_nondigital.png", replace	
+graph export "`png_stub'/live_without_nondigital_byproduct_users.png", replace	
 
 **** interactions
-graph hbar pos_int if category == 1, over(product, label(labsize(vsmall))) ///
+graph hbar pos_int if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle(Positive interactions (%), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
-graph export "`png_stub'/positivenetwork_by_product_digital.png", replace	
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/positivenetwork_by_product_digital.png", width(1000) height(1500) replace	
 
 graph hbar pos_int if category == 2, over(product, label(labsize(tiny))) ///
 	ytitle(Positive interactions (%), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/positivenetwork_by_product_nondigital.png", replace	
+	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/positivenetwork_by_product_nondigital.png", width(1000) height(1500) replace	
 
 graph hbar pos_int if category == 1 & social_platform == 1, over(product, label(labsize(vsmall))) ///
-	ytitle(Positive interactions on 'social' platforms (%), size(medium)) ///
+	ytitle(Positive interactions on 'social' platforms (%), size(medsmall)) ///
 	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
-graph export "`png_stub'/positivenetwork_by_product_socialdigital.png", replace	
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/positivenetwork_by_product_socialdigital.png", width(1000) height(1500) replace	
 
 cibar pos_int, over(category) ///
 	gr(ytitle(Positive interactions (%), size(medlarge)) ///
@@ -354,7 +390,7 @@ cibar pos_int if social_platform == 1, over(social_media) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
 	barlabel(on)  blposition(12) blsize(medlarge)		
-graph export "`png_stub'/positivenetwork_digital_by_social.png", replace									
+graph export "`png_stub'/positivenetwork_social_by_socialmedia.png", replace									
 			
 **** time
 graph hbar time if category == 1, over(product, label(labsize(tiny))) ///
@@ -404,14 +440,19 @@ graph export "`png_stub'/minutes_by_social_livewithout.png", replace
 graph hbar selfcontrol_n if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle(Self control problems (%), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
-graph export "`png_stub'/selfcontrol_by_product_digital.png", replace	
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/selfcontrol_by_product_digital.png", width(1000) height(1500) replace	
+
 
 graph hbar selfcontrol_n if category == 2, over(product, label(labsize(tiny))) ///
 	ytitle(Self control problems (%), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
-graph export "`png_stub'/selfcontrol_by_product_nondigital.png", replace		
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/selfcontrol_by_product_nondigital.png", width(1000) height(1500) replace	
+
+
 cibar selfcontrol_n, over(category) ///
 	gr(ytitle(Self control problems (%), size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
@@ -434,14 +475,16 @@ replace wta = 1000 if wta > 1000
 graph hbar wta if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle(WTA to deactivate (USD), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
-graph export "`png_stub'/wta_by_product_digital.png", replace	
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/wta_by_product_digital.png", width(1000) height(1500) replace	
 
 graph hbar wta if category == 2, over(product, label(labsize(tiny))) ///
 	ytitle(WTA to deactivate (USD), size(medium)) ///
 	ylabel(, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f))
-graph export "`png_stub'/wta_by_product_nondigital.png", replace	
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/wta_by_product_nondigital.png", width(1000) height(1500) replace	
 
 cibar wta, over(category) ///
 	gr(ytitle(WTA to deactivate (USD), size(medlarge)) ///
