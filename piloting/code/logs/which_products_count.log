@@ -1,0 +1,2045 @@
+-------------------------------------------------------------------------------
+      name:  which_products_count
+       log:  /Applications/GitHub/digitalproducts/piloting/code/logs/which_prod
+> ucts_count.log
+  log type:  text
+ opened on:  11 Dec 2023, 10:23:42
+
+. 
+. insheet using "data/raw/prolific/digital_social_products/digital-social-produ
+> cts_December 8, 2023_10.18.csv", names clear
+(902 vars, 604 obs)
+
+. drop in 1/2
+(2 observations deleted)
+
+. drop if status == "Survey Preview"      
+(0 observations deleted)
+
+. drop if strpos(consent, "NOT")
+(0 observations deleted)
+
+. destring *, replace
+startdate: contains nonnumeric characters; no replace
+enddate: contains nonnumeric characters; no replace
+status: contains nonnumeric characters; no replace
+ipaddress: contains nonnumeric characters; no replace
+progress: all characters numeric; replaced as byte
+durationinseconds: all characters numeric; replaced as int
+finished: contains nonnumeric characters; no replace
+recordeddate: contains nonnumeric characters; no replace
+responseid: contains nonnumeric characters; no replace
+recipientlastname: all characters numeric; replaced as byte
+(602 missing values generated)
+recipientfirstname: all characters numeric; replaced as byte
+(602 missing values generated)
+recipientemail: all characters numeric; replaced as byte
+(602 missing values generated)
+externalreference: all characters numeric; replaced as byte
+(602 missing values generated)
+locationlatitude: all characters numeric; replaced as double
+locationlongitude: all characters numeric; replaced as double
+distributionchannel: contains nonnumeric characters; no replace
+userlanguage: contains nonnumeric characters; no replace
+consent: contains nonnumeric characters; no replace
+usage_month_digital_1: contains nonnumeric characters; no replace
+usage_month_digital_2: contains nonnumeric characters; no replace
+usage_month_digital_3: contains nonnumeric characters; no replace
+usage_month_digital_4: contains nonnumeric characters; no replace
+usage_month_digital_5: contains nonnumeric characters; no replace
+usage_month_digital_6: contains nonnumeric characters; no replace
+usage_month_digital_7: contains nonnumeric characters; no replace
+usage_month_digital_8: contains nonnumeric characters; no replace
+usage_month_digital_9: contains nonnumeric characters; no replace
+usage_month_digital_10: contains nonnumeric characters; no replace
+usage_month_digital_11: contains nonnumeric characters; no replace
+usage_month_digital_12: contains nonnumeric characters; no replace
+usage_month_digital_13: contains nonnumeric characters; no replace
+usage_month_digital_14: contains nonnumeric characters; no replace
+usage_month_digital_15: contains nonnumeric characters; no replace
+usage_month_digital_16: contains nonnumeric characters; no replace
+usage_month_digital_17: contains nonnumeric characters; no replace
+usage_month_digital_18: contains nonnumeric characters; no replace
+usage_month_digital_19: contains nonnumeric characters; no replace
+usage_month_digital_20: contains nonnumeric characters; no replace
+usage_month_digital_21: contains nonnumeric characters; no replace
+usage_month_digital_22: contains nonnumeric characters; no replace
+usage_month_digital_23: contains nonnumeric characters; no replace
+usage_month_digital_24: contains nonnumeric characters; no replace
+usage_month_digital_25: contains nonnumeric characters; no replace
+usage_month_digital_26: contains nonnumeric characters; no replace
+usage_month_digital_27: contains nonnumeric characters; no replace
+usage_month_digital_28: contains nonnumeric characters; no replace
+usage_month_digital_29: contains nonnumeric characters; no replace
+usage_month_digital_30: contains nonnumeric characters; no replace
+usage_month_digital_31: contains nonnumeric characters; no replace
+usage_month_digital_32: contains nonnumeric characters; no replace
+usage_month_digital_33: contains nonnumeric characters; no replace
+usage_month_digital_34: contains nonnumeric characters; no replace
+usage_month_digital_35: contains nonnumeric characters; no replace
+usage_month_digital_36: contains nonnumeric characters; no replace
+usage_month_digital_37: contains nonnumeric characters; no replace
+usage_month_digital_38: contains nonnumeric characters; no replace
+usage_month_digital_39: contains nonnumeric characters; no replace
+usage_month_digital_40: contains nonnumeric characters; no replace
+usage_month_digital_41: contains nonnumeric characters; no replace
+usage_month_digital_42: contains nonnumeric characters; no replace
+usage_month_digital_43: contains nonnumeric characters; no replace
+usage_month_digital_44: contains nonnumeric characters; no replace
+usage_month_digital_45: contains nonnumeric characters; no replace
+usage_month_digital_46: contains nonnumeric characters; no replace
+usage_month_digital_47: contains nonnumeric characters; no replace
+usage_month_digital_48: contains nonnumeric characters; no replace
+usage_month_digital_49: contains nonnumeric characters; no replace
+usage_month_digital_50: contains nonnumeric characters; no replace
+usage_month_digital_51: contains nonnumeric characters; no replace
+usage_month_digital_52: contains nonnumeric characters; no replace
+usage_month_digital_53: contains nonnumeric characters; no replace
+usage_month_digital_54: contains nonnumeric characters; no replace
+usage_month_digital_55: contains nonnumeric characters; no replace
+usage_month_digital_56: contains nonnumeric characters; no replace
+usage_month_digital_57: contains nonnumeric characters; no replace
+usage_month_digital_58: contains nonnumeric characters; no replace
+usage_month_digital_59: contains nonnumeric characters; no replace
+without_digital_1: contains nonnumeric characters; no replace
+without_digital_2: contains nonnumeric characters; no replace
+without_digital_3: contains nonnumeric characters; no replace
+without_digital_4: contains nonnumeric characters; no replace
+without_digital_5: contains nonnumeric characters; no replace
+without_digital_6: contains nonnumeric characters; no replace
+without_digital_7: contains nonnumeric characters; no replace
+without_digital_8: contains nonnumeric characters; no replace
+without_digital_9: contains nonnumeric characters; no replace
+without_digital_10: contains nonnumeric characters; no replace
+without_digital_11: contains nonnumeric characters; no replace
+without_digital_12: contains nonnumeric characters; no replace
+without_digital_13: contains nonnumeric characters; no replace
+without_digital_14: contains nonnumeric characters; no replace
+without_digital_15: contains nonnumeric characters; no replace
+without_digital_16: contains nonnumeric characters; no replace
+without_digital_17: contains nonnumeric characters; no replace
+without_digital_18: contains nonnumeric characters; no replace
+without_digital_19: contains nonnumeric characters; no replace
+without_digital_20: contains nonnumeric characters; no replace
+without_digital_21: contains nonnumeric characters; no replace
+without_digital_22: contains nonnumeric characters; no replace
+without_digital_23: contains nonnumeric characters; no replace
+without_digital_24: contains nonnumeric characters; no replace
+without_digital_25: contains nonnumeric characters; no replace
+without_digital_26: contains nonnumeric characters; no replace
+without_digital_27: contains nonnumeric characters; no replace
+without_digital_28: contains nonnumeric characters; no replace
+without_digital_29: contains nonnumeric characters; no replace
+without_digital_30: contains nonnumeric characters; no replace
+without_digital_31: contains nonnumeric characters; no replace
+without_digital_32: contains nonnumeric characters; no replace
+without_digital_33: contains nonnumeric characters; no replace
+without_digital_34: contains nonnumeric characters; no replace
+without_digital_35: contains nonnumeric characters; no replace
+without_digital_36: contains nonnumeric characters; no replace
+without_digital_37: contains nonnumeric characters; no replace
+without_digital_38: contains nonnumeric characters; no replace
+without_digital_39: contains nonnumeric characters; no replace
+without_digital_40: contains nonnumeric characters; no replace
+without_digital_41: contains nonnumeric characters; no replace
+without_digital_42: contains nonnumeric characters; no replace
+without_digital_43: contains nonnumeric characters; no replace
+without_digital_44: contains nonnumeric characters; no replace
+without_digital_45: contains nonnumeric characters; no replace
+without_digital_46: contains nonnumeric characters; no replace
+without_digital_47: contains nonnumeric characters; no replace
+without_digital_48: contains nonnumeric characters; no replace
+without_digital_49: contains nonnumeric characters; no replace
+without_digital_50: contains nonnumeric characters; no replace
+without_digital_51: contains nonnumeric characters; no replace
+without_digital_52: contains nonnumeric characters; no replace
+without_digital_53: contains nonnumeric characters; no replace
+without_digital_54: contains nonnumeric characters; no replace
+without_digital_55: contains nonnumeric characters; no replace
+without_digital_56: contains nonnumeric characters; no replace
+without_digital_57: contains nonnumeric characters; no replace
+without_digital_58: contains nonnumeric characters; no replace
+without_digital_59: contains nonnumeric characters; no replace
+_interaction_digital_1: contains nonnumeric characters; no replace
+_selfcontrol_digital: contains nonnumeric characters; no replace
+_minutes_digital: all characters numeric; replaced as int
+(570 missing values generated)
+_time_digital: all characters numeric; replaced as byte
+(570 missing values generated)
+_wta_digital: all characters numeric; replaced as int
+(570 missing values generated)
+v142: contains nonnumeric characters; no replace
+v143: contains nonnumeric characters; no replace
+v144: all characters numeric; replaced as byte
+(580 missing values generated)
+v145: all characters numeric; replaced as byte
+(580 missing values generated)
+v146: all characters numeric; replaced as double
+(580 missing values generated)
+v147: contains nonnumeric characters; no replace
+v148: contains nonnumeric characters; no replace
+v149: all characters numeric; replaced as byte
+(566 missing values generated)
+v150: all characters numeric; replaced as byte
+(566 missing values generated)
+v151: all characters numeric; replaced as int
+(567 missing values generated)
+v152: contains nonnumeric characters; no replace
+v153: contains nonnumeric characters; no replace
+v154: all characters numeric; replaced as byte
+(575 missing values generated)
+v155: all characters numeric; replaced as byte
+(575 missing values generated)
+v156: all characters numeric; replaced as double
+(575 missing values generated)
+v157: contains nonnumeric characters; no replace
+v158: contains nonnumeric characters; no replace
+v159: all characters numeric; replaced as int
+(567 missing values generated)
+v160: all characters numeric; replaced as byte
+(567 missing values generated)
+v161: all characters numeric; replaced as double
+(567 missing values generated)
+v162: contains nonnumeric characters; no replace
+v163: contains nonnumeric characters; no replace
+v164: all characters numeric; replaced as byte
+(589 missing values generated)
+v165: all characters numeric; replaced as byte
+(589 missing values generated)
+v166: all characters numeric; replaced as int
+(589 missing values generated)
+v167: contains nonnumeric characters; no replace
+v168: contains nonnumeric characters; no replace
+v169: all characters numeric; replaced as int
+(554 missing values generated)
+v170: all characters numeric; replaced as byte
+(554 missing values generated)
+v171: all characters numeric; replaced as long
+(554 missing values generated)
+v172: contains nonnumeric characters; no replace
+v173: contains nonnumeric characters; no replace
+v174: all characters numeric; replaced as byte
+(585 missing values generated)
+v175: all characters numeric; replaced as byte
+(585 missing values generated)
+v176: all characters numeric; replaced as long
+(585 missing values generated)
+v177: contains nonnumeric characters; no replace
+v178: contains nonnumeric characters; no replace
+v179: all characters numeric; replaced as int
+(560 missing values generated)
+v180: all characters numeric; replaced as byte
+(560 missing values generated)
+v181: all characters numeric; replaced as long
+(560 missing values generated)
+v182: contains nonnumeric characters; no replace
+v183: contains nonnumeric characters; no replace
+v184: all characters numeric; replaced as int
+(579 missing values generated)
+v185: all characters numeric; replaced as byte
+(579 missing values generated)
+v186: all characters numeric; replaced as long
+(579 missing values generated)
+v187: contains nonnumeric characters; no replace
+v188: contains nonnumeric characters; no replace
+v189: all characters numeric; replaced as int
+(585 missing values generated)
+v190: all characters numeric; replaced as byte
+(585 missing values generated)
+v191: all characters numeric; replaced as int
+(585 missing values generated)
+v192: contains nonnumeric characters; no replace
+v193: contains nonnumeric characters; no replace
+v194: all characters numeric; replaced as int
+(571 missing values generated)
+v195: all characters numeric; replaced as byte
+(571 missing values generated)
+v196: all characters numeric; replaced as double
+(571 missing values generated)
+v197: contains nonnumeric characters; no replace
+v198: contains nonnumeric characters; no replace
+v199: all characters numeric; replaced as byte
+(595 missing values generated)
+v200: all characters numeric; replaced as byte
+(595 missing values generated)
+v201: all characters numeric; replaced as int
+(595 missing values generated)
+v202: contains nonnumeric characters; no replace
+v203: contains nonnumeric characters; no replace
+v204: all characters numeric; replaced as byte
+(553 missing values generated)
+v205: all characters numeric; replaced as byte
+(553 missing values generated)
+v206: all characters numeric; replaced as int
+(553 missing values generated)
+v207: contains nonnumeric characters; no replace
+v208: contains nonnumeric characters; no replace
+v209: all characters numeric; replaced as int
+(580 missing values generated)
+v210: all characters numeric; replaced as byte
+(580 missing values generated)
+v211: all characters numeric; replaced as long
+(580 missing values generated)
+v212: contains nonnumeric characters; no replace
+v213: contains nonnumeric characters; no replace
+v214: all characters numeric; replaced as int
+(582 missing values generated)
+v215: all characters numeric; replaced as byte
+(582 missing values generated)
+v216: all characters numeric; replaced as long
+(582 missing values generated)
+v217: contains nonnumeric characters; no replace
+v218: contains nonnumeric characters; no replace
+v219: all characters numeric; replaced as byte
+(596 missing values generated)
+v220: all characters numeric; replaced as byte
+(596 missing values generated)
+v221: all characters numeric; replaced as int
+(597 missing values generated)
+v222: contains nonnumeric characters; no replace
+v223: contains nonnumeric characters; no replace
+v224: all characters numeric; replaced as byte
+(597 missing values generated)
+v225: all characters numeric; replaced as byte
+(597 missing values generated)
+v226: all characters numeric; replaced as long
+(597 missing values generated)
+v227: contains nonnumeric characters; no replace
+v228: contains nonnumeric characters; no replace
+v229: all characters numeric; replaced as int
+(568 missing values generated)
+v230: all characters numeric; replaced as byte
+(568 missing values generated)
+v231: all characters numeric; replaced as int
+(568 missing values generated)
+v232: contains nonnumeric characters; no replace
+v233: contains nonnumeric characters; no replace
+v234: all characters numeric; replaced as int
+(588 missing values generated)
+v235: all characters numeric; replaced as byte
+(588 missing values generated)
+v236: all characters numeric; replaced as int
+(588 missing values generated)
+v237: contains nonnumeric characters; no replace
+v238: contains nonnumeric characters; no replace
+v239: all characters numeric; replaced as byte
+(588 missing values generated)
+v240: all characters numeric; replaced as byte
+(588 missing values generated)
+v241: all characters numeric; replaced as long
+(588 missing values generated)
+v242: contains nonnumeric characters; no replace
+v243: contains nonnumeric characters; no replace
+v244: all characters numeric; replaced as double
+(552 missing values generated)
+v245: all characters numeric; replaced as byte
+(552 missing values generated)
+v246: all characters numeric; replaced as long
+(552 missing values generated)
+v247: contains nonnumeric characters; no replace
+v248: contains nonnumeric characters; no replace
+v249: all characters numeric; replaced as byte
+(574 missing values generated)
+v250: all characters numeric; replaced as byte
+(574 missing values generated)
+v251: all characters numeric; replaced as double
+(574 missing values generated)
+v252: contains nonnumeric characters; no replace
+v253: contains nonnumeric characters; no replace
+v254: all characters numeric; replaced as byte
+(599 missing values generated)
+v255: all characters numeric; replaced as byte
+(599 missing values generated)
+v256: all characters numeric; replaced as byte
+(599 missing values generated)
+v257: contains nonnumeric characters; no replace
+v258: contains nonnumeric characters; no replace
+v259: all characters numeric; replaced as byte
+(600 missing values generated)
+v260: all characters numeric; replaced as byte
+(600 missing values generated)
+v261: all characters numeric; replaced as long
+(600 missing values generated)
+v262: contains nonnumeric characters; no replace
+v263: contains nonnumeric characters; no replace
+v264: all characters numeric; replaced as int
+(594 missing values generated)
+v265: all characters numeric; replaced as byte
+(594 missing values generated)
+v266: all characters numeric; replaced as long
+(594 missing values generated)
+v267: contains nonnumeric characters; no replace
+v268: contains nonnumeric characters; no replace
+v269: all characters numeric; replaced as double
+(581 missing values generated)
+v270: all characters numeric; replaced as byte
+(581 missing values generated)
+v271: all characters numeric; replaced as int
+(581 missing values generated)
+v272: contains nonnumeric characters; no replace
+v273: contains nonnumeric characters; no replace
+v274: all characters numeric; replaced as byte
+(594 missing values generated)
+v275: all characters numeric; replaced as byte
+(594 missing values generated)
+v276: all characters numeric; replaced as int
+(594 missing values generated)
+v277: contains nonnumeric characters; no replace
+v278: contains nonnumeric characters; no replace
+v279: all characters numeric; replaced as byte
+(585 missing values generated)
+v280: all characters numeric; replaced as byte
+(585 missing values generated)
+v281: all characters numeric; replaced as int
+(586 missing values generated)
+v282: contains nonnumeric characters; no replace
+v283: contains nonnumeric characters; no replace
+v284: all characters numeric; replaced as double
+(595 missing values generated)
+v285: all characters numeric; replaced as byte
+(595 missing values generated)
+v286: all characters numeric; replaced as int
+(595 missing values generated)
+v287: contains nonnumeric characters; no replace
+v288: contains nonnumeric characters; no replace
+v289: all characters numeric; replaced as byte
+(584 missing values generated)
+v290: all characters numeric; replaced as byte
+(584 missing values generated)
+v291: all characters numeric; replaced as double
+(584 missing values generated)
+v292: contains nonnumeric characters; no replace
+v293: contains nonnumeric characters; no replace
+v294: all characters numeric; replaced as byte
+(586 missing values generated)
+v295: all characters numeric; replaced as byte
+(586 missing values generated)
+v296: all characters numeric; replaced as int
+(586 missing values generated)
+v297: contains nonnumeric characters; no replace
+v298: contains nonnumeric characters; no replace
+v299: all characters numeric; replaced as int
+(587 missing values generated)
+v300: all characters numeric; replaced as byte
+(587 missing values generated)
+v301: all characters numeric; replaced as int
+(587 missing values generated)
+v302: contains nonnumeric characters; no replace
+v303: contains nonnumeric characters; no replace
+v304: all characters numeric; replaced as byte
+(589 missing values generated)
+v305: all characters numeric; replaced as byte
+(589 missing values generated)
+v306: all characters numeric; replaced as int
+(589 missing values generated)
+v307: contains nonnumeric characters; no replace
+v308: contains nonnumeric characters; no replace
+v309: all characters numeric; replaced as byte
+(591 missing values generated)
+v310: all characters numeric; replaced as byte
+(591 missing values generated)
+v311: all characters numeric; replaced as double
+(591 missing values generated)
+v312: contains nonnumeric characters; no replace
+v313: contains nonnumeric characters; no replace
+v314: all characters numeric; replaced as int
+(569 missing values generated)
+v315: all characters numeric; replaced as byte
+(569 missing values generated)
+v316: all characters numeric; replaced as int
+(569 missing values generated)
+v317: contains nonnumeric characters; no replace
+v318: contains nonnumeric characters; no replace
+v319: all characters numeric; replaced as int
+(553 missing values generated)
+v320: all characters numeric; replaced as byte
+(553 missing values generated)
+v321: all characters numeric; replaced as int
+(553 missing values generated)
+v322: contains nonnumeric characters; no replace
+v323: contains nonnumeric characters; no replace
+v324: all characters numeric; replaced as int
+(573 missing values generated)
+v325: all characters numeric; replaced as byte
+(573 missing values generated)
+v326: all characters numeric; replaced as long
+(573 missing values generated)
+v327: contains nonnumeric characters; no replace
+v328: contains nonnumeric characters; no replace
+v329: all characters numeric; replaced as int
+(568 missing values generated)
+v330: all characters numeric; replaced as byte
+(568 missing values generated)
+v331: all characters numeric; replaced as long
+(568 missing values generated)
+v332: contains nonnumeric characters; no replace
+v333: contains nonnumeric characters; no replace
+v334: all characters numeric; replaced as byte
+(595 missing values generated)
+v335: all characters numeric; replaced as byte
+(595 missing values generated)
+v336: all characters numeric; replaced as int
+(595 missing values generated)
+v337: contains nonnumeric characters; no replace
+v338: contains nonnumeric characters; no replace
+v339: all characters numeric; replaced as byte
+(588 missing values generated)
+v340: all characters numeric; replaced as byte
+(588 missing values generated)
+v341: all characters numeric; replaced as double
+(588 missing values generated)
+v342: contains nonnumeric characters; no replace
+v343: contains nonnumeric characters; no replace
+v344: all characters numeric; replaced as byte
+(601 missing values generated)
+v345: all characters numeric; replaced as byte
+(601 missing values generated)
+v346: all characters numeric; replaced as byte
+(601 missing values generated)
+v347: contains nonnumeric characters; no replace
+v348: contains nonnumeric characters; no replace
+v349: all characters numeric; replaced as byte
+(601 missing values generated)
+v350: all characters numeric; replaced as byte
+(601 missing values generated)
+v351: all characters numeric; replaced as int
+(601 missing values generated)
+v352: contains nonnumeric characters; no replace
+v353: contains nonnumeric characters; no replace
+v354: all characters numeric; replaced as byte
+(596 missing values generated)
+v355: all characters numeric; replaced as byte
+(596 missing values generated)
+v356: all characters numeric; replaced as int
+(596 missing values generated)
+v357: contains nonnumeric characters; no replace
+v358: contains nonnumeric characters; no replace
+v359: all characters numeric; replaced as byte
+(593 missing values generated)
+v360: all characters numeric; replaced as byte
+(593 missing values generated)
+v361: all characters numeric; replaced as int
+(593 missing values generated)
+v362: contains nonnumeric characters; no replace
+v363: contains nonnumeric characters; no replace
+v364: all characters numeric; replaced as byte
+(594 missing values generated)
+v365: all characters numeric; replaced as byte
+(594 missing values generated)
+v366: all characters numeric; replaced as byte
+(594 missing values generated)
+v367: contains nonnumeric characters; no replace
+v368: contains nonnumeric characters; no replace
+v369: all characters numeric; replaced as byte
+(598 missing values generated)
+v370: all characters numeric; replaced as byte
+(598 missing values generated)
+v371: all characters numeric; replaced as double
+(598 missing values generated)
+v372: contains nonnumeric characters; no replace
+v373: contains nonnumeric characters; no replace
+v374: all characters numeric; replaced as byte
+(601 missing values generated)
+v375: all characters numeric; replaced as byte
+(601 missing values generated)
+v376: all characters numeric; replaced as byte
+(601 missing values generated)
+v377: contains nonnumeric characters; no replace
+v378: contains nonnumeric characters; no replace
+v379: all characters numeric; replaced as byte
+(589 missing values generated)
+v380: all characters numeric; replaced as byte
+(589 missing values generated)
+v381: all characters numeric; replaced as int
+(589 missing values generated)
+v382: contains nonnumeric characters; no replace
+v383: contains nonnumeric characters; no replace
+v384: all characters numeric; replaced as byte
+(592 missing values generated)
+v385: all characters numeric; replaced as byte
+(592 missing values generated)
+v386: all characters numeric; replaced as int
+(592 missing values generated)
+v387: contains nonnumeric characters; no replace
+v388: contains nonnumeric characters; no replace
+v389: all characters numeric; replaced as byte
+(595 missing values generated)
+v390: all characters numeric; replaced as byte
+(595 missing values generated)
+v391: all characters numeric; replaced as int
+(595 missing values generated)
+v392: contains nonnumeric characters; no replace
+v393: contains nonnumeric characters; no replace
+v394: all characters numeric; replaced as byte
+(599 missing values generated)
+v395: all characters numeric; replaced as byte
+(599 missing values generated)
+v396: all characters numeric; replaced as int
+(599 missing values generated)
+v397: contains nonnumeric characters; no replace
+v398: contains nonnumeric characters; no replace
+v399: all characters numeric; replaced as byte
+(592 missing values generated)
+v400: all characters numeric; replaced as byte
+(592 missing values generated)
+v401: all characters numeric; replaced as int
+(592 missing values generated)
+v402: contains nonnumeric characters; no replace
+v403: contains nonnumeric characters; no replace
+v404: all characters numeric; replaced as byte
+(592 missing values generated)
+v405: all characters numeric; replaced as byte
+(592 missing values generated)
+v406: all characters numeric; replaced as int
+(592 missing values generated)
+v407: contains nonnumeric characters; no replace
+v408: contains nonnumeric characters; no replace
+v409: all characters numeric; replaced as byte
+(590 missing values generated)
+v410: all characters numeric; replaced as byte
+(590 missing values generated)
+v411: all characters numeric; replaced as long
+(590 missing values generated)
+v412: contains nonnumeric characters; no replace
+v413: contains nonnumeric characters; no replace
+v414: all characters numeric; replaced as byte
+(596 missing values generated)
+v415: all characters numeric; replaced as byte
+(596 missing values generated)
+v416: all characters numeric; replaced as int
+(596 missing values generated)
+v417: contains nonnumeric characters; no replace
+v418: contains nonnumeric characters; no replace
+v419: all characters numeric; replaced as byte
+(573 missing values generated)
+v420: all characters numeric; replaced as byte
+(573 missing values generated)
+v421: all characters numeric; replaced as double
+(573 missing values generated)
+v422: contains nonnumeric characters; no replace
+v423: contains nonnumeric characters; no replace
+v424: all characters numeric; replaced as byte
+(592 missing values generated)
+v425: all characters numeric; replaced as byte
+(592 missing values generated)
+v426: all characters numeric; replaced as int
+(592 missing values generated)
+v427: contains nonnumeric characters; no replace
+v428: contains nonnumeric characters; no replace
+v429: all characters numeric; replaced as int
+(594 missing values generated)
+v430: all characters numeric; replaced as byte
+(594 missing values generated)
+v431: all characters numeric; replaced as byte
+(594 missing values generated)
+any_digital: contains nonnumeric characters; no replace
+which_digital: contains nonnumeric characters; no replace
+usage_month_physical_1: contains nonnumeric characters; no replace
+usage_month_physical_2: contains nonnumeric characters; no replace
+usage_month_physical_3: contains nonnumeric characters; no replace
+usage_month_physical_4: contains nonnumeric characters; no replace
+usage_month_physical_5: contains nonnumeric characters; no replace
+usage_month_physical_6: contains nonnumeric characters; no replace
+usage_month_physical_7: contains nonnumeric characters; no replace
+usage_month_physical_8: contains nonnumeric characters; no replace
+usage_month_physical_9: contains nonnumeric characters; no replace
+usage_month_physical_10: contains nonnumeric characters; no replace
+usage_month_physical_11: contains nonnumeric characters; no replace
+usage_month_physical_12: contains nonnumeric characters; no replace
+usage_month_physical_13: contains nonnumeric characters; no replace
+usage_month_physical_14: contains nonnumeric characters; no replace
+usage_month_physical_15: contains nonnumeric characters; no replace
+usage_month_physical_16: contains nonnumeric characters; no replace
+usage_month_physical_17: contains nonnumeric characters; no replace
+usage_month_physical_18: contains nonnumeric characters; no replace
+usage_month_physical_19: contains nonnumeric characters; no replace
+usage_month_physical_20: contains nonnumeric characters; no replace
+usage_month_physical_21: contains nonnumeric characters; no replace
+usage_month_physical_22: contains nonnumeric characters; no replace
+usage_month_physical_23: contains nonnumeric characters; no replace
+usage_month_physical_24: contains nonnumeric characters; no replace
+usage_month_physical_25: contains nonnumeric characters; no replace
+usage_month_physical_26: contains nonnumeric characters; no replace
+usage_month_physical_27: contains nonnumeric characters; no replace
+usage_month_physical_28: contains nonnumeric characters; no replace
+usage_month_physical_29: contains nonnumeric characters; no replace
+usage_month_physical_30: contains nonnumeric characters; no replace
+usage_month_physical_31: contains nonnumeric characters; no replace
+usage_month_physical_32: contains nonnumeric characters; no replace
+usage_month_physical_33: contains nonnumeric characters; no replace
+usage_month_physical_34: contains nonnumeric characters; no replace
+usage_month_physical_35: contains nonnumeric characters; no replace
+usage_month_physical_36: contains nonnumeric characters; no replace
+usage_month_physical_37: contains nonnumeric characters; no replace
+usage_month_physical_38: contains nonnumeric characters; no replace
+usage_month_physical_39: contains nonnumeric characters; no replace
+usage_month_physical_40: contains nonnumeric characters; no replace
+usage_month_physical_41: contains nonnumeric characters; no replace
+usage_month_physical_42: contains nonnumeric characters; no replace
+usage_month_physical_43: contains nonnumeric characters; no replace
+usage_month_physical_44: contains nonnumeric characters; no replace
+usage_month_physical_45: contains nonnumeric characters; no replace
+usage_month_physical_46: contains nonnumeric characters; no replace
+usage_month_physical_47: contains nonnumeric characters; no replace
+usage_month_physical_48: contains nonnumeric characters; no replace
+usage_month_physical_49: contains nonnumeric characters; no replace
+usage_month_physical_50: contains nonnumeric characters; no replace
+usage_month_physical_51: contains nonnumeric characters; no replace
+usage_month_physical_52: contains nonnumeric characters; no replace
+usage_month_physical_53: contains nonnumeric characters; no replace
+usage_month_physical_54: contains nonnumeric characters; no replace
+usage_month_physical_55: contains nonnumeric characters; no replace
+usage_month_physical_56: contains nonnumeric characters; no replace
+usage_month_physical_57: contains nonnumeric characters; no replace
+usage_month_physical_58: contains nonnumeric characters; no replace
+usage_month_physical_59: contains nonnumeric characters; no replace
+usage_month_physical_60: contains nonnumeric characters; no replace
+usage_month_physical_61: contains nonnumeric characters; no replace
+usage_month_physical_62: contains nonnumeric characters; no replace
+usage_month_physical_63: contains nonnumeric characters; no replace
+usage_month_physical_64: contains nonnumeric characters; no replace
+usage_month_physical_65: contains nonnumeric characters; no replace
+usage_month_physical_66: contains nonnumeric characters; no replace
+usage_month_physical_67: contains nonnumeric characters; no replace
+usage_month_physical_68: contains nonnumeric characters; no replace
+usage_month_physical_69: contains nonnumeric characters; no replace
+usage_month_physical_70: contains nonnumeric characters; no replace
+usage_month_physical_71: contains nonnumeric characters; no replace
+usage_month_physical_72: contains nonnumeric characters; no replace
+usage_month_physical_73: contains nonnumeric characters; no replace
+usage_month_physical_74: contains nonnumeric characters; no replace
+usage_month_physical_75: contains nonnumeric characters; no replace
+usage_month_physical_76: contains nonnumeric characters; no replace
+usage_month_physical_77: contains nonnumeric characters; no replace
+without_physical_1: contains nonnumeric characters; no replace
+without_physical_2: contains nonnumeric characters; no replace
+without_physical_3: contains nonnumeric characters; no replace
+without_physical_4: contains nonnumeric characters; no replace
+without_physical_5: contains nonnumeric characters; no replace
+without_physical_6: contains nonnumeric characters; no replace
+without_physical_7: contains nonnumeric characters; no replace
+without_physical_8: contains nonnumeric characters; no replace
+without_physical_9: contains nonnumeric characters; no replace
+without_physical_10: contains nonnumeric characters; no replace
+without_physical_11: contains nonnumeric characters; no replace
+without_physical_12: contains nonnumeric characters; no replace
+without_physical_13: contains nonnumeric characters; no replace
+without_physical_14: contains nonnumeric characters; no replace
+without_physical_15: contains nonnumeric characters; no replace
+without_physical_16: contains nonnumeric characters; no replace
+without_physical_17: contains nonnumeric characters; no replace
+without_physical_18: contains nonnumeric characters; no replace
+without_physical_19: contains nonnumeric characters; no replace
+without_physical_20: contains nonnumeric characters; no replace
+without_physical_21: contains nonnumeric characters; no replace
+without_physical_22: contains nonnumeric characters; no replace
+without_physical_23: contains nonnumeric characters; no replace
+without_physical_24: contains nonnumeric characters; no replace
+without_physical_25: contains nonnumeric characters; no replace
+without_physical_26: contains nonnumeric characters; no replace
+without_physical_27: contains nonnumeric characters; no replace
+without_physical_28: contains nonnumeric characters; no replace
+without_physical_29: contains nonnumeric characters; no replace
+without_physical_30: contains nonnumeric characters; no replace
+without_physical_31: contains nonnumeric characters; no replace
+without_physical_32: contains nonnumeric characters; no replace
+without_physical_33: contains nonnumeric characters; no replace
+without_physical_34: contains nonnumeric characters; no replace
+without_physical_35: contains nonnumeric characters; no replace
+without_physical_36: contains nonnumeric characters; no replace
+without_physical_37: contains nonnumeric characters; no replace
+without_physical_38: contains nonnumeric characters; no replace
+without_physical_39: contains nonnumeric characters; no replace
+without_physical_40: contains nonnumeric characters; no replace
+without_physical_41: contains nonnumeric characters; no replace
+without_physical_42: contains nonnumeric characters; no replace
+without_physical_43: contains nonnumeric characters; no replace
+without_physical_44: contains nonnumeric characters; no replace
+without_physical_45: contains nonnumeric characters; no replace
+without_physical_46: contains nonnumeric characters; no replace
+without_physical_47: contains nonnumeric characters; no replace
+without_physical_48: contains nonnumeric characters; no replace
+without_physical_49: contains nonnumeric characters; no replace
+without_physical_50: contains nonnumeric characters; no replace
+without_physical_51: contains nonnumeric characters; no replace
+without_physical_52: contains nonnumeric characters; no replace
+without_physical_53: contains nonnumeric characters; no replace
+without_physical_54: contains nonnumeric characters; no replace
+without_physical_55: contains nonnumeric characters; no replace
+without_physical_56: contains nonnumeric characters; no replace
+without_physical_57: contains nonnumeric characters; no replace
+without_physical_58: contains nonnumeric characters; no replace
+without_physical_59: contains nonnumeric characters; no replace
+without_physical_60: contains nonnumeric characters; no replace
+without_physical_61: contains nonnumeric characters; no replace
+without_physical_62: contains nonnumeric characters; no replace
+without_physical_63: contains nonnumeric characters; no replace
+without_physical_64: contains nonnumeric characters; no replace
+without_physical_65: contains nonnumeric characters; no replace
+without_physical_66: contains nonnumeric characters; no replace
+without_physical_67: contains nonnumeric characters; no replace
+without_physical_68: contains nonnumeric characters; no replace
+without_physical_69: contains nonnumeric characters; no replace
+without_physical_70: contains nonnumeric characters; no replace
+without_physical_71: contains nonnumeric characters; no replace
+without_physical_72: contains nonnumeric characters; no replace
+without_physical_73: contains nonnumeric characters; no replace
+without_physical_74: contains nonnumeric characters; no replace
+without_physical_75: contains nonnumeric characters; no replace
+without_physical_76: contains nonnumeric characters; no replace
+without_physical_77: contains nonnumeric characters; no replace
+_interaction_physical_1: all characters numeric; replaced as byte
+(602 missing values generated)
+_selfcontrol_physical: all characters numeric; replaced as byte
+(602 missing values generated)
+_time_physical: all characters numeric; replaced as byte
+(602 missing values generated)
+_wta_physical: all characters numeric; replaced as byte
+(602 missing values generated)
+v592: contains nonnumeric characters; no replace
+v593: contains nonnumeric characters; no replace
+v594: all characters numeric; replaced as byte
+(598 missing values generated)
+v595: all characters numeric; replaced as int
+(598 missing values generated)
+v596: contains nonnumeric characters; no replace
+v597: contains nonnumeric characters; no replace
+v598: all characters numeric; replaced as byte
+(596 missing values generated)
+v599: all characters numeric; replaced as int
+(596 missing values generated)
+v600: contains nonnumeric characters; no replace
+v601: contains nonnumeric characters; no replace
+v602: all characters numeric; replaced as byte
+(592 missing values generated)
+v603: all characters numeric; replaced as int
+(592 missing values generated)
+v604: contains nonnumeric characters; no replace
+v605: contains nonnumeric characters; no replace
+v606: all characters numeric; replaced as byte
+(574 missing values generated)
+v607: all characters numeric; replaced as int
+(574 missing values generated)
+v608: contains nonnumeric characters; no replace
+v609: contains nonnumeric characters; no replace
+v610: all characters numeric; replaced as byte
+(594 missing values generated)
+v611: all characters numeric; replaced as int
+(594 missing values generated)
+v612: contains nonnumeric characters; no replace
+v613: contains nonnumeric characters; no replace
+v614: all characters numeric; replaced as byte
+(580 missing values generated)
+v615: all characters numeric; replaced as int
+(580 missing values generated)
+v616: contains nonnumeric characters; no replace
+v617: contains nonnumeric characters; no replace
+v618: all characters numeric; replaced as byte
+(597 missing values generated)
+v619: all characters numeric; replaced as byte
+(597 missing values generated)
+v620: contains nonnumeric characters; no replace
+v621: contains nonnumeric characters; no replace
+v622: all characters numeric; replaced as byte
+(599 missing values generated)
+v623: all characters numeric; replaced as byte
+(599 missing values generated)
+v624: contains nonnumeric characters; no replace
+v625: contains nonnumeric characters; no replace
+v626: all characters numeric; replaced as byte
+(593 missing values generated)
+v627: all characters numeric; replaced as int
+(593 missing values generated)
+v628: contains nonnumeric characters; no replace
+v629: contains nonnumeric characters; no replace
+v630: all characters numeric; replaced as byte
+(584 missing values generated)
+v631: all characters numeric; replaced as int
+(584 missing values generated)
+v632: contains nonnumeric characters; no replace
+v633: contains nonnumeric characters; no replace
+v634: all characters numeric; replaced as byte
+(586 missing values generated)
+v635: all characters numeric; replaced as long
+(586 missing values generated)
+v636: contains nonnumeric characters; no replace
+v637: contains nonnumeric characters; no replace
+v638: all characters numeric; replaced as byte
+(599 missing values generated)
+v639: all characters numeric; replaced as int
+(599 missing values generated)
+v640: contains nonnumeric characters; no replace
+v641: contains nonnumeric characters; no replace
+v642: all characters numeric; replaced as byte
+(600 missing values generated)
+v643: all characters numeric; replaced as int
+(600 missing values generated)
+v644: contains nonnumeric characters; no replace
+v645: contains nonnumeric characters; no replace
+v646: all characters numeric; replaced as byte
+(591 missing values generated)
+v647: all characters numeric; replaced as int
+(591 missing values generated)
+v648: contains nonnumeric characters; no replace
+v649: contains nonnumeric characters; no replace
+v650: all characters numeric; replaced as byte
+(598 missing values generated)
+v651: all characters numeric; replaced as int
+(598 missing values generated)
+v652: contains nonnumeric characters; no replace
+v653: contains nonnumeric characters; no replace
+v654: all characters numeric; replaced as byte
+(577 missing values generated)
+v655: all characters numeric; replaced as int
+(577 missing values generated)
+v656: contains nonnumeric characters; no replace
+v657: contains nonnumeric characters; no replace
+v658: all characters numeric; replaced as byte
+(579 missing values generated)
+v659: all characters numeric; replaced as int
+(579 missing values generated)
+v660: contains nonnumeric characters; no replace
+v661: contains nonnumeric characters; no replace
+v662: all characters numeric; replaced as byte
+(599 missing values generated)
+v663: all characters numeric; replaced as int
+(599 missing values generated)
+v664: contains nonnumeric characters; no replace
+v665: contains nonnumeric characters; no replace
+v666: all characters numeric; replaced as byte
+(591 missing values generated)
+v667: all characters numeric; replaced as int
+(591 missing values generated)
+v668: contains nonnumeric characters; no replace
+v669: contains nonnumeric characters; no replace
+v670: all characters numeric; replaced as byte
+(597 missing values generated)
+v671: all characters numeric; replaced as int
+(597 missing values generated)
+v672: contains nonnumeric characters; no replace
+v673: contains nonnumeric characters; no replace
+v674: all characters numeric; replaced as byte
+(592 missing values generated)
+v675: all characters numeric; replaced as int
+(592 missing values generated)
+v676: contains nonnumeric characters; no replace
+v677: contains nonnumeric characters; no replace
+v678: all characters numeric; replaced as byte
+(596 missing values generated)
+v679: all characters numeric; replaced as int
+(596 missing values generated)
+v680: contains nonnumeric characters; no replace
+v681: contains nonnumeric characters; no replace
+v682: all characters numeric; replaced as byte
+(595 missing values generated)
+v683: all characters numeric; replaced as int
+(595 missing values generated)
+v684: contains nonnumeric characters; no replace
+v685: contains nonnumeric characters; no replace
+v686: all characters numeric; replaced as byte
+(599 missing values generated)
+v687: all characters numeric; replaced as int
+(600 missing values generated)
+v688: contains nonnumeric characters; no replace
+v689: contains nonnumeric characters; no replace
+v690: all characters numeric; replaced as byte
+(596 missing values generated)
+v691: all characters numeric; replaced as byte
+(596 missing values generated)
+v692: contains nonnumeric characters; no replace
+v693: contains nonnumeric characters; no replace
+v694: all characters numeric; replaced as byte
+(587 missing values generated)
+v695: all characters numeric; replaced as int
+(587 missing values generated)
+v696: contains nonnumeric characters; no replace
+v697: contains nonnumeric characters; no replace
+v698: all characters numeric; replaced as byte
+(599 missing values generated)
+v699: all characters numeric; replaced as byte
+(599 missing values generated)
+v700: contains nonnumeric characters; no replace
+v701: contains nonnumeric characters; no replace
+v702: all characters numeric; replaced as byte
+(598 missing values generated)
+v703: all characters numeric; replaced as int
+(598 missing values generated)
+v704: contains nonnumeric characters; no replace
+v705: contains nonnumeric characters; no replace
+v706: all characters numeric; replaced as byte
+(597 missing values generated)
+v707: all characters numeric; replaced as int
+(597 missing values generated)
+v708: contains nonnumeric characters; no replace
+v709: contains nonnumeric characters; no replace
+v710: all characters numeric; replaced as byte
+(599 missing values generated)
+v711: all characters numeric; replaced as long
+(599 missing values generated)
+v712: contains nonnumeric characters; no replace
+v713: contains nonnumeric characters; no replace
+v714: all characters numeric; replaced as byte
+(579 missing values generated)
+v715: all characters numeric; replaced as int
+(579 missing values generated)
+v716: contains nonnumeric characters; no replace
+v717: contains nonnumeric characters; no replace
+v718: all characters numeric; replaced as byte
+(582 missing values generated)
+v719: all characters numeric; replaced as int
+(582 missing values generated)
+v720: contains nonnumeric characters; no replace
+v721: contains nonnumeric characters; no replace
+v722: all characters numeric; replaced as byte
+(596 missing values generated)
+v723: all characters numeric; replaced as int
+(596 missing values generated)
+v724: contains nonnumeric characters; no replace
+v725: contains nonnumeric characters; no replace
+v726: all characters numeric; replaced as byte
+(594 missing values generated)
+v727: all characters numeric; replaced as int
+(594 missing values generated)
+v728: contains nonnumeric characters; no replace
+v729: contains nonnumeric characters; no replace
+v730: all characters numeric; replaced as byte
+(593 missing values generated)
+v731: all characters numeric; replaced as int
+(593 missing values generated)
+v732: contains nonnumeric characters; no replace
+v733: contains nonnumeric characters; no replace
+v734: all characters numeric; replaced as byte
+(594 missing values generated)
+v735: all characters numeric; replaced as byte
+(594 missing values generated)
+v736: contains nonnumeric characters; no replace
+v737: contains nonnumeric characters; no replace
+v738: all characters numeric; replaced as byte
+(601 missing values generated)
+v739: all characters numeric; replaced as int
+(601 missing values generated)
+v740: all characters numeric; replaced as byte
+(602 missing values generated)
+v741: all characters numeric; replaced as byte
+(602 missing values generated)
+v742: all characters numeric; replaced as byte
+(602 missing values generated)
+v743: all characters numeric; replaced as byte
+(602 missing values generated)
+v744: contains nonnumeric characters; no replace
+v745: contains nonnumeric characters; no replace
+v746: all characters numeric; replaced as byte
+(597 missing values generated)
+v747: all characters numeric; replaced as int
+(597 missing values generated)
+v748: contains nonnumeric characters; no replace
+v749: contains nonnumeric characters; no replace
+v750: all characters numeric; replaced as byte
+(601 missing values generated)
+v751: all characters numeric; replaced as byte
+(601 missing values generated)
+v752: contains nonnumeric characters; no replace
+v753: contains nonnumeric characters; no replace
+v754: all characters numeric; replaced as byte
+(601 missing values generated)
+v755: all characters numeric; replaced as byte
+(601 missing values generated)
+v756: contains nonnumeric characters; no replace
+v757: contains nonnumeric characters; no replace
+v758: all characters numeric; replaced as byte
+(599 missing values generated)
+v759: all characters numeric; replaced as int
+(599 missing values generated)
+v760: contains nonnumeric characters; no replace
+v761: contains nonnumeric characters; no replace
+v762: all characters numeric; replaced as byte
+(599 missing values generated)
+v763: all characters numeric; replaced as int
+(599 missing values generated)
+v764: contains nonnumeric characters; no replace
+v765: contains nonnumeric characters; no replace
+v766: all characters numeric; replaced as byte
+(600 missing values generated)
+v767: all characters numeric; replaced as byte
+(600 missing values generated)
+v768: contains nonnumeric characters; no replace
+v769: contains nonnumeric characters; no replace
+v770: all characters numeric; replaced as byte
+(601 missing values generated)
+v771: all characters numeric; replaced as int
+(601 missing values generated)
+v772: contains nonnumeric characters; no replace
+v773: contains nonnumeric characters; no replace
+v774: all characters numeric; replaced as byte
+(599 missing values generated)
+v775: all characters numeric; replaced as byte
+(599 missing values generated)
+v776: contains nonnumeric characters; no replace
+v777: contains nonnumeric characters; no replace
+v778: all characters numeric; replaced as byte
+(599 missing values generated)
+v779: all characters numeric; replaced as int
+(599 missing values generated)
+v780: contains nonnumeric characters; no replace
+v781: contains nonnumeric characters; no replace
+v782: all characters numeric; replaced as byte
+(591 missing values generated)
+v783: all characters numeric; replaced as int
+(591 missing values generated)
+v784: contains nonnumeric characters; no replace
+v785: contains nonnumeric characters; no replace
+v786: all characters numeric; replaced as byte
+(589 missing values generated)
+v787: all characters numeric; replaced as int
+(589 missing values generated)
+v788: contains nonnumeric characters; no replace
+v789: contains nonnumeric characters; no replace
+v790: all characters numeric; replaced as byte
+(591 missing values generated)
+v791: all characters numeric; replaced as int
+(591 missing values generated)
+v792: contains nonnumeric characters; no replace
+v793: contains nonnumeric characters; no replace
+v794: all characters numeric; replaced as byte
+(592 missing values generated)
+v795: all characters numeric; replaced as byte
+(592 missing values generated)
+v796: contains nonnumeric characters; no replace
+v797: contains nonnumeric characters; no replace
+v798: all characters numeric; replaced as byte
+(587 missing values generated)
+v799: all characters numeric; replaced as int
+(587 missing values generated)
+v800: contains nonnumeric characters; no replace
+v801: contains nonnumeric characters; no replace
+v802: all characters numeric; replaced as byte
+(598 missing values generated)
+v803: all characters numeric; replaced as int
+(598 missing values generated)
+v804: all characters numeric; replaced as byte
+(602 missing values generated)
+v805: all characters numeric; replaced as byte
+(602 missing values generated)
+v806: all characters numeric; replaced as byte
+(602 missing values generated)
+v807: all characters numeric; replaced as byte
+(602 missing values generated)
+v808: contains nonnumeric characters; no replace
+v809: contains nonnumeric characters; no replace
+v810: all characters numeric; replaced as byte
+(597 missing values generated)
+v811: all characters numeric; replaced as int
+(597 missing values generated)
+v812: contains nonnumeric characters; no replace
+v813: contains nonnumeric characters; no replace
+v814: all characters numeric; replaced as byte
+(595 missing values generated)
+v815: all characters numeric; replaced as int
+(595 missing values generated)
+v816: contains nonnumeric characters; no replace
+v817: contains nonnumeric characters; no replace
+v818: all characters numeric; replaced as byte
+(588 missing values generated)
+v819: all characters numeric; replaced as int
+(588 missing values generated)
+v820: contains nonnumeric characters; no replace
+v821: contains nonnumeric characters; no replace
+v822: all characters numeric; replaced as byte
+(592 missing values generated)
+v823: all characters numeric; replaced as byte
+(592 missing values generated)
+v824: contains nonnumeric characters; no replace
+v825: contains nonnumeric characters; no replace
+v826: all characters numeric; replaced as byte
+(600 missing values generated)
+v827: all characters numeric; replaced as byte
+(600 missing values generated)
+v828: contains nonnumeric characters; no replace
+v829: contains nonnumeric characters; no replace
+v830: all characters numeric; replaced as byte
+(599 missing values generated)
+v831: all characters numeric; replaced as byte
+(599 missing values generated)
+v832: contains nonnumeric characters; no replace
+v833: contains nonnumeric characters; no replace
+v834: all characters numeric; replaced as byte
+(600 missing values generated)
+v835: all characters numeric; replaced as byte
+(600 missing values generated)
+v836: contains nonnumeric characters; no replace
+v837: contains nonnumeric characters; no replace
+v838: all characters numeric; replaced as byte
+(592 missing values generated)
+v839: all characters numeric; replaced as int
+(592 missing values generated)
+v840: contains nonnumeric characters; no replace
+v841: contains nonnumeric characters; no replace
+v842: all characters numeric; replaced as byte
+(600 missing values generated)
+v843: all characters numeric; replaced as int
+(600 missing values generated)
+v844: contains nonnumeric characters; no replace
+v845: contains nonnumeric characters; no replace
+v846: all characters numeric; replaced as byte
+(599 missing values generated)
+v847: all characters numeric; replaced as int
+(599 missing values generated)
+v848: contains nonnumeric characters; no replace
+v849: contains nonnumeric characters; no replace
+v850: all characters numeric; replaced as byte
+(589 missing values generated)
+v851: all characters numeric; replaced as int
+(589 missing values generated)
+v852: contains nonnumeric characters; no replace
+v853: contains nonnumeric characters; no replace
+v854: all characters numeric; replaced as byte
+(596 missing values generated)
+v855: all characters numeric; replaced as int
+(596 missing values generated)
+v856: contains nonnumeric characters; no replace
+v857: contains nonnumeric characters; no replace
+v858: all characters numeric; replaced as byte
+(579 missing values generated)
+v859: all characters numeric; replaced as double
+(579 missing values generated)
+v860: contains nonnumeric characters; no replace
+v861: contains nonnumeric characters; no replace
+v862: all characters numeric; replaced as byte
+(573 missing values generated)
+v863: all characters numeric; replaced as int
+(573 missing values generated)
+v864: contains nonnumeric characters; no replace
+v865: contains nonnumeric characters; no replace
+v866: all characters numeric; replaced as byte
+(582 missing values generated)
+v867: all characters numeric; replaced as int
+(582 missing values generated)
+v868: contains nonnumeric characters; no replace
+v869: contains nonnumeric characters; no replace
+v870: all characters numeric; replaced as byte
+(600 missing values generated)
+v871: all characters numeric; replaced as int
+(600 missing values generated)
+v872: contains nonnumeric characters; no replace
+v873: contains nonnumeric characters; no replace
+v874: all characters numeric; replaced as byte
+(597 missing values generated)
+v875: all characters numeric; replaced as int
+(597 missing values generated)
+v876: contains nonnumeric characters; no replace
+v877: contains nonnumeric characters; no replace
+v878: all characters numeric; replaced as byte
+(595 missing values generated)
+v879: all characters numeric; replaced as int
+(595 missing values generated)
+v880: contains nonnumeric characters; no replace
+v881: contains nonnumeric characters; no replace
+v882: all characters numeric; replaced as byte
+(598 missing values generated)
+v883: all characters numeric; replaced as byte
+(598 missing values generated)
+v884: contains nonnumeric characters; no replace
+v885: contains nonnumeric characters; no replace
+v886: all characters numeric; replaced as byte
+(599 missing values generated)
+v887: all characters numeric; replaced as byte
+(599 missing values generated)
+v888: contains nonnumeric characters; no replace
+v889: contains nonnumeric characters; no replace
+v890: all characters numeric; replaced as byte
+(600 missing values generated)
+v891: all characters numeric; replaced as int
+(600 missing values generated)
+v892: contains nonnumeric characters; no replace
+v893: contains nonnumeric characters; no replace
+v894: all characters numeric; replaced as byte
+(594 missing values generated)
+v895: all characters numeric; replaced as int
+(594 missing values generated)
+any_product: contains nonnumeric characters; no replace
+which_products: contains nonnumeric characters; no replace
+gender: contains nonnumeric characters; no replace
+age: all characters numeric; replaced as byte
+prolific_pid: contains nonnumeric characters; no replace
+study_id: contains nonnumeric characters; no replace
+session_id: contains nonnumeric characters; no replace
+
+. 
+. keep responseid any_digital which_digital any_product which_products
+
+. 
+. tempfile products
+
+. save `products', replace
+(file /var/folders/g9/6g3b77fj0sv688_bjjtrl3c40000gn/T//S_52603.000001 not
+    found)
+file /var/folders/g9/6g3b77fj0sv688_bjjtrl3c40000gn/T//S_52603.000001 saved
+    as .dta format
+
+. 
+. * append categories and products data
+. insheet using "data/raw/prolific/digital_social_categories/digital-social-cat
+> egories_December 6, 2023_10.10.csv", names clear
+(515 vars, 402 obs)
+
+. drop in 1/2
+(2 observations deleted)
+
+. drop if status == "Survey Preview"      
+(0 observations deleted)
+
+. drop if strpos(consent, "NOT")
+(0 observations deleted)
+
+. destring *, replace
+startdate: contains nonnumeric characters; no replace
+enddate: contains nonnumeric characters; no replace
+status: contains nonnumeric characters; no replace
+ipaddress: contains nonnumeric characters; no replace
+progress: all characters numeric; replaced as byte
+durationinseconds: all characters numeric; replaced as int
+finished: contains nonnumeric characters; no replace
+recordeddate: contains nonnumeric characters; no replace
+responseid: contains nonnumeric characters; no replace
+recipientlastname: all characters numeric; replaced as byte
+(400 missing values generated)
+recipientfirstname: all characters numeric; replaced as byte
+(400 missing values generated)
+recipientemail: all characters numeric; replaced as byte
+(400 missing values generated)
+externalreference: all characters numeric; replaced as byte
+(400 missing values generated)
+locationlatitude: all characters numeric; replaced as double
+locationlongitude: all characters numeric; replaced as double
+distributionchannel: contains nonnumeric characters; no replace
+userlanguage: contains nonnumeric characters; no replace
+consent: contains nonnumeric characters; no replace
+usage_month_digital_1: contains nonnumeric characters; no replace
+usage_month_digital_2: contains nonnumeric characters; no replace
+usage_month_digital_3: contains nonnumeric characters; no replace
+usage_month_digital_4: contains nonnumeric characters; no replace
+usage_month_digital_5: contains nonnumeric characters; no replace
+usage_month_digital_6: contains nonnumeric characters; no replace
+usage_month_digital_7: contains nonnumeric characters; no replace
+usage_month_digital_8: contains nonnumeric characters; no replace
+usage_month_digital_9: contains nonnumeric characters; no replace
+usage_month_digital_10: contains nonnumeric characters; no replace
+usage_month_digital_11: contains nonnumeric characters; no replace
+usage_month_digital_12: contains nonnumeric characters; no replace
+usage_month_digital_13: contains nonnumeric characters; no replace
+usage_month_digital_14: contains nonnumeric characters; no replace
+usage_month_digital_15: contains nonnumeric characters; no replace
+usage_month_digital_16: contains nonnumeric characters; no replace
+usage_month_digital_17: contains nonnumeric characters; no replace
+usage_month_digital_18: contains nonnumeric characters; no replace
+usage_month_digital_19: contains nonnumeric characters; no replace
+usage_month_digital_20: contains nonnumeric characters; no replace
+usage_month_digital_21: contains nonnumeric characters; no replace
+usage_month_digital_22: contains nonnumeric characters; no replace
+usage_month_digital_23: contains nonnumeric characters; no replace
+usage_month_digital_24: contains nonnumeric characters; no replace
+usage_month_digital_25: contains nonnumeric characters; no replace
+usage_month_digital_26: contains nonnumeric characters; no replace
+without_digital_1: contains nonnumeric characters; no replace
+without_digital_2: contains nonnumeric characters; no replace
+without_digital_3: contains nonnumeric characters; no replace
+without_digital_4: contains nonnumeric characters; no replace
+without_digital_5: contains nonnumeric characters; no replace
+without_digital_6: contains nonnumeric characters; no replace
+without_digital_7: contains nonnumeric characters; no replace
+without_digital_8: contains nonnumeric characters; no replace
+without_digital_9: contains nonnumeric characters; no replace
+without_digital_10: contains nonnumeric characters; no replace
+without_digital_11: contains nonnumeric characters; no replace
+without_digital_12: contains nonnumeric characters; no replace
+without_digital_13: contains nonnumeric characters; no replace
+without_digital_14: contains nonnumeric characters; no replace
+without_digital_15: contains nonnumeric characters; no replace
+without_digital_16: contains nonnumeric characters; no replace
+without_digital_17: contains nonnumeric characters; no replace
+without_digital_18: contains nonnumeric characters; no replace
+without_digital_19: contains nonnumeric characters; no replace
+without_digital_20: contains nonnumeric characters; no replace
+without_digital_21: contains nonnumeric characters; no replace
+without_digital_22: contains nonnumeric characters; no replace
+without_digital_23: contains nonnumeric characters; no replace
+without_digital_24: contains nonnumeric characters; no replace
+without_digital_25: contains nonnumeric characters; no replace
+without_digital_26: contains nonnumeric characters; no replace
+_network_digital_1: contains nonnumeric characters; no replace
+_interaction_digital_1: contains nonnumeric characters; no replace
+_selfcontrol_digital: contains nonnumeric characters; no replace
+_minutes_digital: all characters numeric; replaced as byte
+(361 missing values generated)
+_time_digital: all characters numeric; replaced as byte
+(361 missing values generated)
+_wta_digital: all characters numeric; replaced as int
+(361 missing values generated)
+v77: contains nonnumeric characters; no replace
+v78: contains nonnumeric characters; no replace
+v79: contains nonnumeric characters; no replace
+v80: all characters numeric; replaced as int
+(340 missing values generated)
+v81: all characters numeric; replaced as byte
+(340 missing values generated)
+v82: all characters numeric; replaced as long
+(341 missing values generated)
+v83: contains nonnumeric characters; no replace
+v84: contains nonnumeric characters; no replace
+v85: contains nonnumeric characters; no replace
+v86: all characters numeric; replaced as int
+(345 missing values generated)
+v87: all characters numeric; replaced as double
+(345 missing values generated)
+v88: all characters numeric; replaced as int
+(345 missing values generated)
+v89: contains nonnumeric characters; no replace
+v90: contains nonnumeric characters; no replace
+v91: contains nonnumeric characters; no replace
+v92: all characters numeric; replaced as int
+(343 missing values generated)
+v93: all characters numeric; replaced as byte
+(343 missing values generated)
+v94: all characters numeric; replaced as long
+(343 missing values generated)
+v95: contains nonnumeric characters; no replace
+v96: contains nonnumeric characters; no replace
+v97: contains nonnumeric characters; no replace
+v98: all characters numeric; replaced as byte
+(360 missing values generated)
+v99: all characters numeric; replaced as byte
+(360 missing values generated)
+v100: all characters numeric; replaced as double
+(360 missing values generated)
+v101: contains nonnumeric characters; no replace
+v102: contains nonnumeric characters; no replace
+v103: contains nonnumeric characters; no replace
+v104: all characters numeric; replaced as int
+(349 missing values generated)
+v105: all characters numeric; replaced as byte
+(349 missing values generated)
+v106: all characters numeric; replaced as long
+(349 missing values generated)
+v107: contains nonnumeric characters; no replace
+v108: contains nonnumeric characters; no replace
+v109: contains nonnumeric characters; no replace
+v110: all characters numeric; replaced as int
+(347 missing values generated)
+v111: all characters numeric; replaced as double
+(347 missing values generated)
+v112: all characters numeric; replaced as long
+(347 missing values generated)
+v113: contains nonnumeric characters; no replace
+v114: contains nonnumeric characters; no replace
+v115: contains nonnumeric characters; no replace
+v116: all characters numeric; replaced as int
+(371 missing values generated)
+v117: all characters numeric; replaced as byte
+(371 missing values generated)
+v118: all characters numeric; replaced as int
+(371 missing values generated)
+v119: contains nonnumeric characters; no replace
+v120: contains nonnumeric characters; no replace
+v121: contains nonnumeric characters; no replace
+v122: all characters numeric; replaced as int
+(361 missing values generated)
+v123: all characters numeric; replaced as byte
+(361 missing values generated)
+v124: all characters numeric; replaced as double
+(361 missing values generated)
+v125: contains nonnumeric characters; no replace
+v126: contains nonnumeric characters; no replace
+v127: contains nonnumeric characters; no replace
+v128: all characters numeric; replaced as int
+(352 missing values generated)
+v129: all characters numeric; replaced as byte
+(352 missing values generated)
+v130: all characters numeric; replaced as int
+(352 missing values generated)
+v131: contains nonnumeric characters; no replace
+v132: contains nonnumeric characters; no replace
+v133: contains nonnumeric characters; no replace
+v134: all characters numeric; replaced as double
+(379 missing values generated)
+v135: all characters numeric; replaced as byte
+(379 missing values generated)
+v136: all characters numeric; replaced as int
+(380 missing values generated)
+v137: contains nonnumeric characters; no replace
+v138: contains nonnumeric characters; no replace
+v139: contains nonnumeric characters; no replace
+v140: all characters numeric; replaced as byte
+(371 missing values generated)
+v141: all characters numeric; replaced as byte
+(371 missing values generated)
+v142: all characters numeric; replaced as long
+(371 missing values generated)
+v143: contains nonnumeric characters; no replace
+v144: contains nonnumeric characters; no replace
+v145: contains nonnumeric characters; no replace
+v146: all characters numeric; replaced as int
+(383 missing values generated)
+v147: all characters numeric; replaced as byte
+(383 missing values generated)
+v148: all characters numeric; replaced as double
+(383 missing values generated)
+v149: contains nonnumeric characters; no replace
+v150: contains nonnumeric characters; no replace
+v151: contains nonnumeric characters; no replace
+v152: all characters numeric; replaced as int
+(362 missing values generated)
+v153: all characters numeric; replaced as byte
+(362 missing values generated)
+v154: all characters numeric; replaced as int
+(362 missing values generated)
+v155: contains nonnumeric characters; no replace
+v156: contains nonnumeric characters; no replace
+v157: contains nonnumeric characters; no replace
+v158: all characters numeric; replaced as byte
+(352 missing values generated)
+v159: all characters numeric; replaced as byte
+(352 missing values generated)
+v160: all characters numeric; replaced as long
+(352 missing values generated)
+v161: contains nonnumeric characters; no replace
+v162: contains nonnumeric characters; no replace
+v163: contains nonnumeric characters; no replace
+v164: all characters numeric; replaced as int
+(373 missing values generated)
+v165: all characters numeric; replaced as byte
+(373 missing values generated)
+v166: all characters numeric; replaced as long
+(373 missing values generated)
+v167: contains nonnumeric characters; no replace
+v168: contains nonnumeric characters; no replace
+v169: contains nonnumeric characters; no replace
+v170: all characters numeric; replaced as int
+(374 missing values generated)
+v171: all characters numeric; replaced as byte
+(374 missing values generated)
+v172: all characters numeric; replaced as int
+(374 missing values generated)
+v173: contains nonnumeric characters; no replace
+v174: contains nonnumeric characters; no replace
+v175: contains nonnumeric characters; no replace
+v176: all characters numeric; replaced as byte
+(391 missing values generated)
+v177: all characters numeric; replaced as byte
+(391 missing values generated)
+v178: all characters numeric; replaced as long
+(391 missing values generated)
+v179: contains nonnumeric characters; no replace
+v180: contains nonnumeric characters; no replace
+v181: contains nonnumeric characters; no replace
+v182: all characters numeric; replaced as int
+(378 missing values generated)
+v183: all characters numeric; replaced as byte
+(378 missing values generated)
+v184: all characters numeric; replaced as long
+(378 missing values generated)
+v185: contains nonnumeric characters; no replace
+v186: contains nonnumeric characters; no replace
+v187: contains nonnumeric characters; no replace
+v188: all characters numeric; replaced as int
+(368 missing values generated)
+v189: all characters numeric; replaced as byte
+(368 missing values generated)
+v190: all characters numeric; replaced as long
+(368 missing values generated)
+v191: contains nonnumeric characters; no replace
+v192: contains nonnumeric characters; no replace
+v193: contains nonnumeric characters; no replace
+v194: all characters numeric; replaced as byte
+(379 missing values generated)
+v195: all characters numeric; replaced as byte
+(379 missing values generated)
+v196: all characters numeric; replaced as int
+(379 missing values generated)
+v197: contains nonnumeric characters; no replace
+v198: contains nonnumeric characters; no replace
+v199: contains nonnumeric characters; no replace
+v200: all characters numeric; replaced as byte
+(378 missing values generated)
+v201: all characters numeric; replaced as byte
+(378 missing values generated)
+v202: all characters numeric; replaced as long
+(378 missing values generated)
+v203: contains nonnumeric characters; no replace
+v204: contains nonnumeric characters; no replace
+v205: contains nonnumeric characters; no replace
+v206: all characters numeric; replaced as int
+(352 missing values generated)
+v207: all characters numeric; replaced as byte
+(352 missing values generated)
+v208: all characters numeric; replaced as long
+(352 missing values generated)
+v209: contains nonnumeric characters; no replace
+v210: contains nonnumeric characters; no replace
+v211: contains nonnumeric characters; no replace
+v212: all characters numeric; replaced as byte
+(390 missing values generated)
+v213: all characters numeric; replaced as byte
+(390 missing values generated)
+v214: all characters numeric; replaced as int
+(390 missing values generated)
+v215: contains nonnumeric characters; no replace
+v216: contains nonnumeric characters; no replace
+v217: contains nonnumeric characters; no replace
+v218: all characters numeric; replaced as int
+(370 missing values generated)
+v219: all characters numeric; replaced as byte
+(370 missing values generated)
+v220: all characters numeric; replaced as long
+(370 missing values generated)
+v221: contains nonnumeric characters; no replace
+v222: contains nonnumeric characters; no replace
+v223: contains nonnumeric characters; no replace
+v224: all characters numeric; replaced as int
+(373 missing values generated)
+v225: all characters numeric; replaced as byte
+(373 missing values generated)
+v226: all characters numeric; replaced as int
+(373 missing values generated)
+any_digital: contains nonnumeric characters; no replace
+which_digital: contains nonnumeric characters; no replace
+usage_month_physical_1: contains nonnumeric characters; no replace
+usage_month_physical_2: contains nonnumeric characters; no replace
+usage_month_physical_3: contains nonnumeric characters; no replace
+usage_month_physical_4: contains nonnumeric characters; no replace
+usage_month_physical_5: contains nonnumeric characters; no replace
+usage_month_physical_6: contains nonnumeric characters; no replace
+usage_month_physical_7: contains nonnumeric characters; no replace
+usage_month_physical_8: contains nonnumeric characters; no replace
+usage_month_physical_9: contains nonnumeric characters; no replace
+usage_month_physical_10: contains nonnumeric characters; no replace
+usage_month_physical_11: contains nonnumeric characters; no replace
+usage_month_physical_12: contains nonnumeric characters; no replace
+usage_month_physical_13: contains nonnumeric characters; no replace
+usage_month_physical_14: contains nonnumeric characters; no replace
+usage_month_physical_15: contains nonnumeric characters; no replace
+usage_month_physical_16: contains nonnumeric characters; no replace
+usage_month_physical_17: contains nonnumeric characters; no replace
+usage_month_physical_18: contains nonnumeric characters; no replace
+usage_month_physical_19: contains nonnumeric characters; no replace
+usage_month_physical_20: contains nonnumeric characters; no replace
+usage_month_physical_21: contains nonnumeric characters; no replace
+usage_month_physical_22: contains nonnumeric characters; no replace
+usage_month_physical_23: contains nonnumeric characters; no replace
+usage_month_physical_24: contains nonnumeric characters; no replace
+usage_month_physical_25: contains nonnumeric characters; no replace
+usage_month_physical_26: contains nonnumeric characters; no replace
+usage_month_physical_27: contains nonnumeric characters; no replace
+usage_month_physical_28: contains nonnumeric characters; no replace
+usage_month_physical_29: contains nonnumeric characters; no replace
+usage_month_physical_30: contains nonnumeric characters; no replace
+usage_month_physical_31: contains nonnumeric characters; no replace
+usage_month_physical_32: contains nonnumeric characters; no replace
+usage_month_physical_33: contains nonnumeric characters; no replace
+usage_month_physical_34: contains nonnumeric characters; no replace
+usage_month_physical_35: contains nonnumeric characters; no replace
+usage_month_physical_36: contains nonnumeric characters; no replace
+usage_month_physical_37: contains nonnumeric characters; no replace
+usage_month_physical_38: contains nonnumeric characters; no replace
+usage_month_physical_39: contains nonnumeric characters; no replace
+usage_month_physical_40: contains nonnumeric characters; no replace
+without_physical_1: contains nonnumeric characters; no replace
+without_physical_2: contains nonnumeric characters; no replace
+without_physical_3: contains nonnumeric characters; no replace
+without_physical_4: contains nonnumeric characters; no replace
+without_physical_5: contains nonnumeric characters; no replace
+without_physical_6: contains nonnumeric characters; no replace
+without_physical_7: contains nonnumeric characters; no replace
+without_physical_8: contains nonnumeric characters; no replace
+without_physical_9: contains nonnumeric characters; no replace
+without_physical_10: contains nonnumeric characters; no replace
+without_physical_11: contains nonnumeric characters; no replace
+without_physical_12: contains nonnumeric characters; no replace
+without_physical_13: contains nonnumeric characters; no replace
+without_physical_14: contains nonnumeric characters; no replace
+without_physical_15: contains nonnumeric characters; no replace
+without_physical_16: contains nonnumeric characters; no replace
+without_physical_17: contains nonnumeric characters; no replace
+without_physical_18: contains nonnumeric characters; no replace
+without_physical_19: contains nonnumeric characters; no replace
+without_physical_20: contains nonnumeric characters; no replace
+without_physical_21: contains nonnumeric characters; no replace
+without_physical_22: contains nonnumeric characters; no replace
+without_physical_23: contains nonnumeric characters; no replace
+without_physical_24: contains nonnumeric characters; no replace
+without_physical_25: contains nonnumeric characters; no replace
+without_physical_26: contains nonnumeric characters; no replace
+without_physical_27: contains nonnumeric characters; no replace
+without_physical_28: contains nonnumeric characters; no replace
+without_physical_29: contains nonnumeric characters; no replace
+without_physical_30: contains nonnumeric characters; no replace
+without_physical_31: contains nonnumeric characters; no replace
+without_physical_32: contains nonnumeric characters; no replace
+without_physical_33: contains nonnumeric characters; no replace
+without_physical_34: contains nonnumeric characters; no replace
+without_physical_35: contains nonnumeric characters; no replace
+without_physical_36: contains nonnumeric characters; no replace
+without_physical_37: contains nonnumeric characters; no replace
+without_physical_38: contains nonnumeric characters; no replace
+without_physical_39: contains nonnumeric characters; no replace
+without_physical_40: contains nonnumeric characters; no replace
+_network_physical_1: contains nonnumeric characters; no replace
+_interaction_physical_1: contains nonnumeric characters; no replace
+_selfcontrol_physical: contains nonnumeric characters; no replace
+_time_physical: all characters numeric; replaced as byte
+(387 missing values generated)
+_wta_physical: all characters numeric; replaced as long
+(387 missing values generated)
+v314: contains nonnumeric characters; no replace
+v315: contains nonnumeric characters; no replace
+v316: contains nonnumeric characters; no replace
+v317: all characters numeric; replaced as byte
+(375 missing values generated)
+v318: all characters numeric; replaced as long
+(375 missing values generated)
+v319: contains nonnumeric characters; no replace
+v320: contains nonnumeric characters; no replace
+v321: contains nonnumeric characters; no replace
+v322: all characters numeric; replaced as byte
+(364 missing values generated)
+v323: all characters numeric; replaced as double
+(364 missing values generated)
+v324: contains nonnumeric characters; no replace
+v325: contains nonnumeric characters; no replace
+v326: contains nonnumeric characters; no replace
+v327: all characters numeric; replaced as byte
+(366 missing values generated)
+v328: all characters numeric; replaced as long
+(367 missing values generated)
+v329: contains nonnumeric characters; no replace
+v330: contains nonnumeric characters; no replace
+v331: contains nonnumeric characters; no replace
+v332: all characters numeric; replaced as byte
+(353 missing values generated)
+v333: all characters numeric; replaced as long
+(353 missing values generated)
+v334: contains nonnumeric characters; no replace
+v335: contains nonnumeric characters; no replace
+v336: contains nonnumeric characters; no replace
+v337: all characters numeric; replaced as byte
+(379 missing values generated)
+v338: all characters numeric; replaced as long
+(379 missing values generated)
+v339: contains nonnumeric characters; no replace
+v340: contains nonnumeric characters; no replace
+v341: contains nonnumeric characters; no replace
+v342: all characters numeric; replaced as byte
+(353 missing values generated)
+v343: all characters numeric; replaced as long
+(353 missing values generated)
+v344: contains nonnumeric characters; no replace
+v345: contains nonnumeric characters; no replace
+v346: contains nonnumeric characters; no replace
+v347: all characters numeric; replaced as byte
+(392 missing values generated)
+v348: all characters numeric; replaced as int
+(392 missing values generated)
+v349: contains nonnumeric characters; no replace
+v350: contains nonnumeric characters; no replace
+v351: contains nonnumeric characters; no replace
+v352: all characters numeric; replaced as double
+(376 missing values generated)
+v353: all characters numeric; replaced as int
+(376 missing values generated)
+v354: contains nonnumeric characters; no replace
+v355: contains nonnumeric characters; no replace
+v356: contains nonnumeric characters; no replace
+v357: all characters numeric; replaced as byte
+(358 missing values generated)
+v358: all characters numeric; replaced as double
+(358 missing values generated)
+v359: contains nonnumeric characters; no replace
+v360: contains nonnumeric characters; no replace
+v361: contains nonnumeric characters; no replace
+v362: all characters numeric; replaced as byte
+(355 missing values generated)
+v363: all characters numeric; replaced as long
+(355 missing values generated)
+v364: contains nonnumeric characters; no replace
+v365: contains nonnumeric characters; no replace
+v366: contains nonnumeric characters; no replace
+v367: all characters numeric; replaced as byte
+(362 missing values generated)
+v368: all characters numeric; replaced as long
+(362 missing values generated)
+v369: contains nonnumeric characters; no replace
+v370: contains nonnumeric characters; no replace
+v371: contains nonnumeric characters; no replace
+v372: all characters numeric; replaced as byte
+(363 missing values generated)
+v373: all characters numeric; replaced as long
+(363 missing values generated)
+v374: contains nonnumeric characters; no replace
+v375: contains nonnumeric characters; no replace
+v376: contains nonnumeric characters; no replace
+v377: all characters numeric; replaced as byte
+(366 missing values generated)
+v378: all characters numeric; replaced as long
+(366 missing values generated)
+v379: contains nonnumeric characters; no replace
+v380: contains nonnumeric characters; no replace
+v381: contains nonnumeric characters; no replace
+v382: all characters numeric; replaced as byte
+(363 missing values generated)
+v383: all characters numeric; replaced as int
+(363 missing values generated)
+v384: contains nonnumeric characters; no replace
+v385: contains nonnumeric characters; no replace
+v386: contains nonnumeric characters; no replace
+v387: all characters numeric; replaced as byte
+(371 missing values generated)
+v388: all characters numeric; replaced as int
+(371 missing values generated)
+v389: contains nonnumeric characters; no replace
+v390: contains nonnumeric characters; no replace
+v391: contains nonnumeric characters; no replace
+v392: all characters numeric; replaced as byte
+(391 missing values generated)
+v393: all characters numeric; replaced as int
+(391 missing values generated)
+v394: contains nonnumeric characters; no replace
+v395: contains nonnumeric characters; no replace
+v396: contains nonnumeric characters; no replace
+v397: all characters numeric; replaced as double
+(347 missing values generated)
+v398: all characters numeric; replaced as long
+(348 missing values generated)
+v399: contains nonnumeric characters; no replace
+v400: contains nonnumeric characters; no replace
+v401: contains nonnumeric characters; no replace
+v402: all characters numeric; replaced as byte
+(373 missing values generated)
+v403: all characters numeric; replaced as int
+(373 missing values generated)
+v404: contains nonnumeric characters; no replace
+v405: contains nonnumeric characters; no replace
+v406: contains nonnumeric characters; no replace
+v407: all characters numeric; replaced as byte
+(374 missing values generated)
+v408: all characters numeric; replaced as long
+(374 missing values generated)
+v409: contains nonnumeric characters; no replace
+v410: contains nonnumeric characters; no replace
+v411: contains nonnumeric characters; no replace
+v412: all characters numeric; replaced as byte
+(396 missing values generated)
+v413: all characters numeric; replaced as int
+(396 missing values generated)
+v414: contains nonnumeric characters; no replace
+v415: contains nonnumeric characters; no replace
+v416: contains nonnumeric characters; no replace
+v417: all characters numeric; replaced as byte
+(397 missing values generated)
+v418: all characters numeric; replaced as int
+(397 missing values generated)
+v419: contains nonnumeric characters; no replace
+v420: contains nonnumeric characters; no replace
+v421: contains nonnumeric characters; no replace
+v422: all characters numeric; replaced as byte
+(389 missing values generated)
+v423: all characters numeric; replaced as int
+(389 missing values generated)
+v424: contains nonnumeric characters; no replace
+v425: contains nonnumeric characters; no replace
+v426: contains nonnumeric characters; no replace
+v427: all characters numeric; replaced as byte
+(377 missing values generated)
+v428: all characters numeric; replaced as long
+(377 missing values generated)
+v429: contains nonnumeric characters; no replace
+v430: contains nonnumeric characters; no replace
+v431: contains nonnumeric characters; no replace
+v432: all characters numeric; replaced as byte
+(386 missing values generated)
+v433: all characters numeric; replaced as int
+(386 missing values generated)
+v434: contains nonnumeric characters; no replace
+v435: contains nonnumeric characters; no replace
+v436: contains nonnumeric characters; no replace
+v437: all characters numeric; replaced as byte
+(389 missing values generated)
+v438: all characters numeric; replaced as long
+(389 missing values generated)
+v439: contains nonnumeric characters; no replace
+v440: contains nonnumeric characters; no replace
+v441: contains nonnumeric characters; no replace
+v442: all characters numeric; replaced as byte
+(375 missing values generated)
+v443: all characters numeric; replaced as long
+(376 missing values generated)
+v444: contains nonnumeric characters; no replace
+v445: contains nonnumeric characters; no replace
+v446: contains nonnumeric characters; no replace
+v447: all characters numeric; replaced as byte
+(382 missing values generated)
+v448: all characters numeric; replaced as int
+(382 missing values generated)
+v449: contains nonnumeric characters; no replace
+v450: contains nonnumeric characters; no replace
+v451: contains nonnumeric characters; no replace
+v452: all characters numeric; replaced as byte
+(387 missing values generated)
+v453: all characters numeric; replaced as int
+(387 missing values generated)
+v454: contains nonnumeric characters; no replace
+v455: contains nonnumeric characters; no replace
+v456: contains nonnumeric characters; no replace
+v457: all characters numeric; replaced as byte
+(393 missing values generated)
+v458: all characters numeric; replaced as byte
+(393 missing values generated)
+v459: contains nonnumeric characters; no replace
+v460: contains nonnumeric characters; no replace
+v461: contains nonnumeric characters; no replace
+v462: all characters numeric; replaced as double
+(372 missing values generated)
+v463: all characters numeric; replaced as int
+(372 missing values generated)
+v464: contains nonnumeric characters; no replace
+v465: contains nonnumeric characters; no replace
+v466: contains nonnumeric characters; no replace
+v467: all characters numeric; replaced as byte
+(395 missing values generated)
+v468: all characters numeric; replaced as int
+(395 missing values generated)
+v469: contains nonnumeric characters; no replace
+v470: contains nonnumeric characters; no replace
+v471: contains nonnumeric characters; no replace
+v472: all characters numeric; replaced as byte
+(390 missing values generated)
+v473: all characters numeric; replaced as int
+(390 missing values generated)
+v474: contains nonnumeric characters; no replace
+v475: contains nonnumeric characters; no replace
+v476: contains nonnumeric characters; no replace
+v477: all characters numeric; replaced as byte
+(378 missing values generated)
+v478: all characters numeric; replaced as long
+(378 missing values generated)
+v479: contains nonnumeric characters; no replace
+v480: contains nonnumeric characters; no replace
+v481: contains nonnumeric characters; no replace
+v482: all characters numeric; replaced as byte
+(378 missing values generated)
+v483: all characters numeric; replaced as long
+(378 missing values generated)
+v484: contains nonnumeric characters; no replace
+v485: contains nonnumeric characters; no replace
+v486: contains nonnumeric characters; no replace
+v487: all characters numeric; replaced as byte
+(354 missing values generated)
+v488: all characters numeric; replaced as double
+(354 missing values generated)
+v489: contains nonnumeric characters; no replace
+v490: contains nonnumeric characters; no replace
+v491: contains nonnumeric characters; no replace
+v492: all characters numeric; replaced as byte
+(350 missing values generated)
+v493: all characters numeric; replaced as long
+(350 missing values generated)
+v494: contains nonnumeric characters; no replace
+v495: contains nonnumeric characters; no replace
+v496: contains nonnumeric characters; no replace
+v497: all characters numeric; replaced as byte
+(392 missing values generated)
+v498: all characters numeric; replaced as int
+(392 missing values generated)
+v499: contains nonnumeric characters; no replace
+v500: contains nonnumeric characters; no replace
+v501: contains nonnumeric characters; no replace
+v502: all characters numeric; replaced as byte
+(390 missing values generated)
+v503: all characters numeric; replaced as long
+(390 missing values generated)
+v504: contains nonnumeric characters; no replace
+v505: contains nonnumeric characters; no replace
+v506: contains nonnumeric characters; no replace
+v507: all characters numeric; replaced as byte
+(391 missing values generated)
+v508: all characters numeric; replaced as int
+(391 missing values generated)
+any_product: contains nonnumeric characters; no replace
+which_products: contains nonnumeric characters; no replace
+gender: contains nonnumeric characters; no replace
+age: all characters numeric; replaced as byte
+prolific_pid: contains nonnumeric characters; no replace
+study_id: contains nonnumeric characters; no replace
+session_id: contains nonnumeric characters; no replace
+
+. 
+. keep responseid any_digital which_digital any_product which_products
+
+. append using `products'
+(variable which_digital was str220, now str377 to accommodate using data's
+       values)
+
+. 
+. tab any_digital // 25.65% of respondents use digital products they don't need
+
+                            any_digital |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                                     No |        374       74.35       74.35
+                                    Yes |        129       25.65      100.00
+----------------------------------------+-----------------------------------
+                                  Total |        503      100.00
+
+. tab any_product // 17.43% of respondents use non-digital products they don't 
+> need
+
+                            any_product |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                                     No |        412       82.57       82.57
+                                    Yes |         87       17.43      100.00
+----------------------------------------+-----------------------------------
+                                  Total |        499      100.00
+
+. 
+. * count number of responses to which_digital which mention social media
+. gen social_digital = regexm(lower(which_digital), "facebook|pinterest|instagr
+> am|linkedin|twitter|snapchat|youtube|whatsapp|reddit|tiktok|nextdoor|dating|m
+> edia")
+
+. replace social_digital = . if missing(which_digital)
+(873 real changes made, 873 to missing)
+
+. tab social_digital // 79.07% of answers indicate social media
+
+social_digi |
+        tal |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |         27       20.93       20.93
+          1 |        102       79.07      100.00
+------------+-----------------------------------
+      Total |        129      100.00
+
+. * 20% of the total responses
+. 
+. gen social_physical= regexm(lower(which_products), "facebook|pinterest|instag
+> ram|linkedin|twitter|snapchat|youtube|whatsapp|reddit|tiktok|nextdoor|dating|
+> media")
+
+. replace social_physical = . if missing(which_products)
+(915 real changes made, 915 to missing)
+
+. tab social_physical // 11.49% of answers indicate social media
+
+social_phys |
+       ical |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |         77       88.51       88.51
+          1 |         10       11.49      100.00
+------------+-----------------------------------
+      Total |         87      100.00
+
+. 
+. log close which_products_count
+      name:  which_products_count
+       log:  /Applications/GitHub/digitalproducts/piloting/code/logs/which_prod
+> ucts_count.log
+  log type:  text
+ closed on:  11 Dec 2023, 10:23:55
+-------------------------------------------------------------------------------
