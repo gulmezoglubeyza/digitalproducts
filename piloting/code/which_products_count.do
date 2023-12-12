@@ -24,8 +24,8 @@ destring *, replace
 keep responseid any_digital which_digital any_product which_products
 append using `products'
 
-tab any_digital // 25.65% of respondents use digital products they don't need
-tab any_product // 17.43% of respondents use non-digital products they don't need
+tab any_digital // 25.65% of respondents use digital products they wish didn't exist
+tab any_product // 17.43% of respondents use non-digital products they wish didn't exist
 
 * count number of responses to which_digital which mention social media
 gen social_digital = regexm(lower(which_digital), "facebook|pinterest|instagram|linkedin|twitter|snapchat|youtube|whatsapp|reddit|tiktok|nextdoor|dating|media")

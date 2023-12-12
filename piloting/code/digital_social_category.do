@@ -120,8 +120,14 @@ label values category categorylbl
 * Define social vs non social for digital products
 generate social_platform = 0 if category == 1
 replace social_platform = 1 if inlist(product, 2, 4, 24, 25)
-label define socialplatform_lbl 0 "Individual" 1 "Social"
+label define socialplatform_lbl 0 "Non-Social" 1 "Social"
 label values social_platform socialplatform_lbl 
+
+* Define social media dummy within social_platforms
+generate social_media = 0 if social_platform == 1
+replace social_media = 1 if product == 2
+label define smlbl 0 "Other social platforms" 1 "Social media"
+label values social_media smlbl
 
 * Usage
 gen uses_product = 0 
@@ -191,6 +197,19 @@ corr without_n social if category == 1
 corr without_n social if category == 2
 corr social pos_int
 
+gen dummy_without = regexm(without, "without")
+egen percent_without = mean(dummy_without), by(product)
+
+preserve
+	keep product percent_without category
+	sum percent_without if category == 1 //weighted average (by frequency) used in cibars
+	sum percent_without if category == 2
+	duplicates drop
+	br
+	sum percent_without if category == 1 // unweighted average
+	sum percent_without if category == 2
+restore
+
 ********** OUTPUT GRAPHS
 
 *** usage	
@@ -247,13 +266,22 @@ cibar without_n if category == 1, over(uses_product social_platform) ///
 	barlabel(on) blposition(12) blsize(medium)
 graph export "`png_stub'/live_without_digital_by_social_usage.png", replace	
 
+cibar without_n if social_platform == 1, over(uses_product social_media) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/live_without_social_by_social_media.png", replace	
+
 cibar without_n, over(social category) ///
 	gr(ytitle(Prefers world without (%), size(large)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medium)
-graph export "`png_stub'/live_without_by_category_social.png", replace	
+graph export "`png_stub'/live_without_by_category_endog_social.png", replace	
+
 
 graph hbar without_n if category == 1, over(product, label(labsize(tiny))) ///
 	ytitle(Prefers world without (%), size(medium)) ///

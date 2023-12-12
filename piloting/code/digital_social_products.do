@@ -130,11 +130,14 @@ label values category categorylbl
 
 * Define social vs non social for digital products
 generate social_platform = 0 if category == 1
-replace social_platform = 1 if inlist(product, 1, 2, 3, 4, 5, 6, 8, ///
-								9, 10, 11, 12, 13, 19, 20, 21, 22, ///
-								25, 26, 29, 30, 33, 34,40, 41, 42, ///
-								43, 44, 45, 47, 48, 49, 50, 51, 52, ///
-								55, 56, 57, 58, 59)
+// replace social_platform = 1 if inlist(product, 1, 2, 3, 4, 5, 6, 8, /// 
+// 								9, 10, 11, 12, 13, 19, 20, 21, 22, /// 
+// 								25, 26, 29, 30, 33, 34,40, 41, 42, /// 
+// 								43, 44, 45, 47, 48, 49, 50, 51, 52, /// 
+// 								55, 56, 57, 58, 59) // 
+
+replace social_platform = 1 if inlist(product, 1, 2, 3, 4, 5, 6, 8, /// 
+								9, 10, 11, 12, 13, 55, 56, 57) // 
 
 label define socialplatform_lbl 0 "Non-Social" 1 "Social"
 label values social_platform socialplatform_lbl 
@@ -215,10 +218,40 @@ preserve
 	sum product_frequency
 restore	
 
-
 tab category if uses_product == 100
 tab product 
 tab product if uses_product == 100
+
+gen count1 = 1
+gen count_user = 1 if uses_product == 100
+
+egen freq_var = total(count1), by(product) 
+egen user_freq_var = total(count_user), by(product) 
+gen user_percent = (user_freq_var / freq_var) 
+
+corr wta minutes // 0.1014
+corr wta time // 0.04
+
+gen usage_n = .
+replace usage_n = 0 if usage == "Not at all"
+replace usage_n = 1 if usage == "Once"
+replace usage_n = 2 if usage == "Once a week"
+replace usage_n = 3 if usage == "Twice a week"
+replace usage_n = 4 if usage == "Every day"
+
+egen sum_usage = total(usage_n), by(product) 
+
+preserve
+	keep product user_percent sum_usage
+	duplicates drop
+	gsort -user_percent
+	br product user_percent
+	
+	gsort -sum_usage
+	br product sum_usage
+restore
+
+
 
 ********** OUTPUT GRAPHS
 
@@ -277,6 +310,22 @@ cibar without_n, over(uses_product category) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medium)
 graph export "`png_stub'/live_without_by_category_usage.png", replace	
+
+cibar without_n if user_freq_var > 5, over(uses_product category) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/live_without_by_category_usage_minuser5.png", replace	
+
+cibar without_n if user_freq_var > 10, over(uses_product category) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/live_without_by_category_usage_minuser10.png", replace	
 
 cibar without_n if category == 1, over(social_platform) ///
 	gr(ytitle("Digital Products:" "Prefers world without (%)", size(large)) ///
