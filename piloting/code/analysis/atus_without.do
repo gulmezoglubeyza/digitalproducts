@@ -2,13 +2,14 @@ clear all
 label drop _all
 set scheme tab2
 
-local png_stub "output/figures/prolific/atus_time"
+local png_stub "output/figures/prolific/atus_without"
 
 ***** Load and prepare
-insheet using "/Users/leolab/Downloads/atus-without_December 20, 2023_08.39.csv", names clear
+insheet using "/Users/leolab/Downloads/atus-without_December 20, 2023_12.56.csv", names clear
+count
 
 drop in 1/2
-// drop if status == "Survey Preview" 	
+drop if status == "Survey Preview" 	
 drop if strpos(consent, "NOT")
 destring *, replace
 
@@ -16,12 +17,12 @@ destring *, replace
 drop status ipaddress progress durationinseconds finished recordeddate recipientlastname recipientfirstname recipientemail externalreference locationlatitude locationlongitude distributionchannel userlanguage consent
 
 missings dropvars, force
-reshape long usage_ without_media_, i(responseid) j(product) string 
+reshape long usage_ without_, i(responseid) j(product) string 
 
 destring product, replace
 
-cap rename usage_ usage
-cap rename without_media_ without
+rename usage_ usage
+rename without_ without
 
 program label_products
 	
@@ -54,6 +55,20 @@ label_products
 * Keep only observations with answers
 drop if missing(usage)
 
+tab product
+tab product if usage == "Yes"
+
+preserve
+	contract product, freq(product_frequency)
+	sum product_frequency, d
+restore	
+
+preserve
+	keep if usage == "Yes"
+	contract product, freq(product_frequency)
+	sum product_frequency, d
+restore	
+
 * Generate categories: 
 * digital vs non-digital
 gen digital = 2
@@ -71,13 +86,38 @@ label values social_media smlbl
 gen category = .
 replace category = 1 if inrange(product, 1, 22)
 replace category = 2 if inrange(product, 23, 29)
-replace category = 3 if inrange(product, 30, 43)
+replace category = 3 if inrange(product, 30, 36) // skipped streaming services
 replace category = 4 if inrange(product, 44, 47) // skipped tobacco
 replace category = 5 if inrange(product, 49, 53)
 replace category = 6 if inrange(product, 54, 58)
-replace category = 7 if inrange(product, 59, 88)
+replace category = 7 if inrange(product, 37, 43) | product == 53 | inrange(product, 59, 88)
 label define categorylbl 1 "Sports/Exercise" 2 "Watching sports" 3 "Media&Entertainment" 4 "Social" 5 "Arts&Literature" 6 "Other Activities" 7 "Digital"  
 label values category categorylbl
+
+* other digital categories
+gen digital_category = 0 if digital == 1
+replace digital_category = 1 if inlist(product, 67, 71, 72, 75, 77, 78, 80, 82, 84)
+replace digital_category = 2 if inlist(product, 68, 70, 79, 81, 85, 63)
+replace digital_category = 3 if inlist(product, 37, 38, 39, 40, 41, 42, 43, 53)
+replace digital_category = 4 if digital_category == 0
+label define digital_category_lbl 1 "Social Media" 2 "Communication" 3 "Media" 4 "Other"
+label values digital_category digital_category_lbl
+
+// gen age_range_group = .
+// replace age_range_group = 1 if age >= 18 & age <= 33
+// replace age_range_group = 2 if age >= 34 & age <= 49
+// replace age_range_group = 3 if age >= 50 & age <= 65
+
+gen age_range_group = .
+replace age_range_group = 1 if age >= 18 & age <= 29
+replace age_range_group = 2 if age >= 30 & age <= 41
+replace age_range_group = 3 if age >= 42 & age <= 53
+replace age_range_group = 4 if age >= 54
+label define age_range_lbl 1 "18-29" 2 "30-41" 3 "42-53" 4 "54-65"
+label values age_range_group age_range_lbl
+
+
+xtile age_group = age, nquantiles(3)
 
 * Usage
 gen usage_n = 0 
@@ -94,17 +134,21 @@ label values without_n without_lbl
 ********** OUTPUT GRAPHS
 
 *** usage	
-graph hbar usage_n if digital == 1, over(product, label(labsize(tiny))) ///
+graph hbar usage_n if digital == 1, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
 	ytitle(Usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/usage_by_product_digital.png", replace	
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/usage_digital_by_product.png", width(1000) height(1500) replace	
 
-graph hbar usage_n if digital == 2, over(product, label(labsize(tiny))) ///
+graph hbar usage_n if digital == 2, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
 	ytitle(Usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medsmall)) ///
-	blabel(bar, position(6) gap(0) size(tiny) format(%9.2f))
-graph export "`png_stub'/usage_by_product_nondigital.png", replace	
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/usage_nondigital_by_product.png", width(1000) height(1500) replace	
 
 cibar usage_n, over(digital) ///
 	gr(ytitle(Usage (%), size(medlarge)) ///
@@ -123,6 +167,39 @@ cibar usage_n, over(category) ///
 graph export "`png_stub'/usage_by_category.png", replace	
 	
 *** without
+
+graph hbar without_n if digital == 1, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Prefers world without (%), size(medium)) ///
+	ylabel(0(20)100, labsize(medsmall)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/live_without_digital_by_product.png", width(1000) height(1500) replace	
+
+graph hbar without_n if digital == 2, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Prefers world without (%), size(medium)) ///
+	ylabel(0(20)100, labsize(medsmall)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/live_without_nondigital_by_product.png", width(1000) height(1500) replace	
+
+graph hbar without_n if digital == 1 & usage_n == 100, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Prefers world without (%) - Users, size(medium)) ///
+	ylabel(0(20)100, labsize(medsmall)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/live_without_digital_by_product_users.png", width(1000) height(1500) replace	
+
+graph hbar without_n if digital == 2 & usage_n == 100, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Prefers world without (%) - Users, size(medium)) ///
+	ylabel(0(20)100, labsize(medsmall)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/live_without_nondigital_by_product_users.png", width(1000) height(1500) replace	
+
 cibar without_n, over(digital) ///
 	gr(ytitle(Prefers world without (%), size(large)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
@@ -150,9 +227,9 @@ graph export "`png_stub'/live_without_by_category.png", replace
 cibar without_n, over(usage_n category) ///
 	gr(ytitle(Prefers world without (%), size(large)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
-	xlabel(, labsize(medlarge) valuelabel nogrid) ///
-	legend(size(medium) rows(2))) ///
-	barlabel(on) blposition(12) blsize(medium)
+	xlabel(, labsize(medsmall) angle(30) valuelabel nogrid) ///
+	legend(size(medium))) ///
+	barlabel(on) blposition(12) blsize(small)
 graph export "`png_stub'/live_without_by_category_usage.png", replace	
 
 cibar without_n if digital == 1, over(social_media) ///
@@ -161,8 +238,7 @@ cibar without_n if digital == 1, over(social_media) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medium)
-graph export "`png_stub'/live_without_digital_by_sm_usage.png", replace	
-
+graph export "`png_stub'/live_without_digital_by_sm.png", replace	
 
 cibar without_n if digital == 1, over(usage_n social_media) ///
 	gr(ytitle(Prefers world without (%), size(large)) ///
@@ -171,4 +247,76 @@ cibar without_n if digital == 1, over(usage_n social_media) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medium)
 graph export "`png_stub'/live_without_digital_by_sm_usage.png", replace	
+
+cibar without_n if digital == 1, over(digital_category) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/live_without_digital_by_digitialcategory.png", replace
+
+cibar without_n if digital == 1, over(usage_n digital_category) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/live_without_digital_by_digitialcategory_usage.png", replace
+
+cibar without_n, over(usage_n age_range_group) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/live_without_by_age_usage.png", replace
+	
+/*	
+cibar without_n if digital == 1, over(usage_n age_range_group) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)	
+	
+
+cibar without_n if social_media == 1, over(usage_n age_range_group) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)	
+	
+	
+cibar without_n if digital == 2, over(usage_n age_range_group) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)		
+	
+
+gen gender_n = 0 if gender == "Male"
+replace gender_n = 1 if gender == "Female"
+label define genderlbl 0 "Male" 1 "Female"
+label values gender_n genderlbl
+	
+cibar without_n, over(usage_n gender_n) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+	
+cibar without_n, over(usage_n age_group) ///
+	gr(ytitle(Prefers world without (%), size(large)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)	
+
+
+
+
 

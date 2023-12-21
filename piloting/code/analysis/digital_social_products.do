@@ -130,12 +130,6 @@ label values category categorylbl
 
 * Define social vs non social for digital products
 generate social_platform = 0 if category == 1
-// replace social_platform = 1 if inlist(product, 1, 2, 3, 4, 5, 6, 8, /// 
-// 								9, 10, 11, 12, 13, 19, 20, 21, 22, /// 
-// 								25, 26, 29, 30, 33, 34,40, 41, 42, /// 
-// 								43, 44, 45, 47, 48, 49, 50, 51, 52, /// 
-// 								55, 56, 57, 58, 59) // 
-
 replace social_platform = 1 if inlist(product, 1, 2, 3, 4, 5, 6, 8, /// 
 								9, 10, 11, 12, 13, 55, 56, 57) // 
 
