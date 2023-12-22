@@ -36,6 +36,18 @@ destring *, replace
 ******* RESHAPE DATA AND PREPARE PLOT VARIABLES
 drop status ipaddress progress durationinseconds finished recordeddate recipientlastname recipientfirstname recipientemail externalreference locationlatitude locationlongitude distributionchannel userlanguage consent
 
+tab cat_sports
+tab cat_watch_sports 
+tab cat_media 
+tab cat_social
+tab cat_arts 
+tab cat_phone_calls
+tab cat_volunteering 
+tab cat_religous 
+tab cat_shopping 
+tab cat_classes 
+tab cat_digital
+
 keep responseid hours* age gender moment
 drop hours_369_text hours_370_text hours_371_text
 
@@ -186,9 +198,7 @@ destring hours, replace
 * If no answer, spent 0 time
 replace hours = 0 if missing(hours)
 
-tab product
-
-* N per product is 35.71 on average (median = 17)
+* N per product is on average (median = )
 preserve
 	keep if hours > 0
 	contract product, freq(product_frequency)
@@ -196,7 +206,7 @@ preserve
 	sum product_frequency, d
 restore	
 
-* respondents engaged in 12.67 activities on average (median = 13)
+* respondents engaged in activities on average (median = )
 preserve
 	keep if hours > 0
 	contract responseid, freq(responseid_freq)
