@@ -141,7 +141,7 @@ preserve
 	save `qualitycheck', replace
 restore 
 
-merge m:1 responseid using `qualitycheck'
+merge m:1 responseid using `qualitycheck', nogen
 
 br responseid product hours live_without quality 
 drop if quality == 0
@@ -166,11 +166,19 @@ preserve
 	sum responseid_freq, d
 restore	
 
+tempfile tempdta
+save `tempdta', replace
+
+import excel "data/temp/atus_3steps_openended/atus_3steps_open_ended_answers_handcoded.xls", sheet("Sheet1") firstrow clear
+merge 1:m responseid using `tempdta', nogen
+drop if quality == 0
+
 * Generate categories: 
 * digital vs non-digital
-gen digital = 2 if product < 89 // leave out sleep,work,chores, other
+gen digital = 2 if product < 94 // leave out sleep,work,chores, other
 replace digital = 1 if inrange(product, 37, 43) | product == 53 | inrange(product, 59, 88) | product == 94
-replace digital = . if product == 91 // Other media could be digital & non-digital
+replace digital = 2 if product == 95 // running
+replace digital = 1 if product == 91 & digitalmedia == 1
 label define digitallbl 1 "Digital" 2 "Non-Digital"
 label values digital digitallbl
 
@@ -232,13 +240,11 @@ gen phone_apps = .
 replace phone_app = 1 if inlist(product, 71, 80, 82, 85)
 tab product if phone_app == 1
 
-br responseid product hours if social_media == 1 & hours > 0
-
 ********** OUTPUT GRAPHS
 
 *** usage	
 
-graph hbar usage if digital == 1, ///
+graph hbar usage if digital == 1 & product < 89, ///
 	over(product, label(labsize(vsmall)) sort(1)) ///
 	ytitle(Usage (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
