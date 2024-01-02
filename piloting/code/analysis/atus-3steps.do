@@ -12,6 +12,7 @@ drop in 1/2
 drop if status == "Survey Preview" 	
 drop if strpos(consent, "NOT")
 destring *, replace
+count
 
 ******* RESHAPE DATA AND PREPARE PLOT VARIABLES
 drop status ipaddress progress durationinseconds finished recordeddate recipientlastname recipientfirstname recipientemail externalreference locationlatitude locationlongitude distributionchannel userlanguage consent
@@ -48,7 +49,7 @@ tab digital
 
 
 keep responseid live_without* hours* age gender
-drop hours_103_text hours_104_text
+drop hours_103_text hours_104_text //other text categories
 
 rename hours_1 hours_997 // sleep
 rename hours_2 hours_998 // work
@@ -128,11 +129,11 @@ label_products
 
 destring hours, replace
 
-
 // br responseid product hours live_without quality if !missing(live_without) & hours == 0 & product < 995
 
 preserve 
-	keep if !missing(live_without) & hours == 0 & product < 995
+	* Low quality if they answered live without (meaning they engaged in activity) but entered 0 hours for activities other than the 'other' text boxes
+	keep if !missing(live_without) & hours == 0 & product < 995 
 	keep responseid product hours live_without
 	gen quality = 0 if !missing(live_without) & hours == 0 & product < 995
 	keep responseid quality
@@ -178,7 +179,7 @@ drop if quality == 0
 gen digital = 2 if product < 94 // leave out sleep,work,chores, other
 replace digital = 1 if inrange(product, 37, 43) | product == 53 | inrange(product, 59, 88) | product == 94
 replace digital = 2 if product == 95 // running
-replace digital = 1 if product == 91 & digitalmedia == 1
+replace digital = 1 if product == 91 & digitalmedia == 1 // text for other media
 label define digitallbl 1 "Digital" 2 "Non-Digital"
 label values digital digitallbl
 
@@ -265,8 +266,37 @@ graph export "`png_stub'/usage_nondigital_by_product.png", width(1000) height(15
 keep if hours > 0
 egen product_freq = count(responseid), by(product)
 keep if product_freq > 20
+drop if product > 996 // sleep, work, hh chores
 
 graph hbar hours if digital == 1, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Daily time spent (hrs), size(medium)) ///
+	ylabel(0(1)6, labsize(medlarge)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/hours_digital_by_product.png", width(1000) height(1500) replace	
+
+
+preserve
+
+	collapse (mean) hours without, by(product)
+	sort without
+	
+	keep if product < 995
+
+	twoway bar hours product, yaxis(2) ||
+		bar hours product, yaxis(1)
+	
+	tw (bar hours product, c(1) yaxis(1)) ///
+	   (bar without product, c(1) yaxis(2))
+		
+	tw hbar hours, over(product, sort(1)) yaxis(2) ///
+		  hbar without, over(product) yaxis(1) 
+
+restore
+
+
+graph hbar hours, ///
 	over(product, label(labsize(vsmall)) sort(1)) ///
 	ytitle(Daily time spent (hrs), size(medium)) ///
 	ylabel(0(1)6, labsize(medlarge)) ///
@@ -429,6 +459,15 @@ cibar without, over(age_group category) ///
 graph export "`png_stub'/without_by_category_age.png", replace		
 
 ** BOTH
+
+cibar hours, over(without) ///
+	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
+	ylabel(0(1)6, labsize(medlarge)) ///
+	xlabel(, labsize(medium) valuelabel nogrid) ///
+	legend(size(medium))) ///
+	barlabel(on) blposition(12) blsize(medsmall)	
+graph export "`png_stub'/hours_by_without.png", replace	
+
 cibar hours, over(digital without) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 	ylabel(0(1)6, labsize(medlarge)) ///
@@ -519,6 +558,7 @@ br hours age product if social_media == 1
 */
 ************* Save excel for quality checks
 
+/*
 ***** Load and prepare
 insheet using "data/raw/prolific/atus_3steps/atus-3steps_December 21, 2023_15.06.csv", names clear
 count
