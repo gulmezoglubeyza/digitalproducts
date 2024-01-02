@@ -14,14 +14,6 @@ drop if strpos(consent, "NOT")
 destring *, replace
 count
 
-******* RESHAPE DATA AND PREPARE PLOT VARIABLES
-drop status ipaddress progress durationinseconds finished recordeddate recipientlastname recipientfirstname recipientemail externalreference locationlatitude locationlongitude distributionchannel userlanguage consent
-
-preserve
-	keep intro1 responseid intro1 act_sports act_sports_23_text act_watchsports act_watchsports_8_text act_media act_media_15_text act_social act_social_6_text act_art act_art_6_text act_digital act_digital_31_text phone volunteering religious shopping classes 
-	 export excel using "data/temp/atus_3steps_openended/atus_3steps_open_ended_answers.xls", firstrow(variables) replace
-restore
-
 tab sports
 tab watchsports 
 tab media 
@@ -33,6 +25,12 @@ tab religious
 tab shopping 
 tab classes 
 tab digital
+
+******* RESHAPE DATA AND PREPARE PLOT VARIABLES
+preserve
+	keep intro1 responseid intro1 act_sports act_sports_23_text act_watchsports act_watchsports_8_text act_media act_media_15_text act_social act_social_6_text act_art act_art_6_text act_digital act_digital_31_text phone volunteering religious shopping classes 
+	 export excel using "data/temp/atus_3steps_openended/atus_3steps_open_ended_answers.xls", firstrow(variables) replace
+restore
 
 keep responseid live_without* hours* age gender
 drop hours_103_text hours_104_text //other text categories
@@ -141,9 +139,7 @@ drop if quality == 0
 * If no answer, spent 0 time
 replace hours = 0 if missing(hours)
 
-tab product
-
-* N per product is 30 on average (median = 12)
+* N per product is .. on average (median = ..)
 preserve
 	keep if hours > 0
 	contract product, freq(product_frequency)
@@ -151,7 +147,7 @@ preserve
 	sum product_frequency, d
 restore	
 
-* respondents engaged in 12 activities on average (median = 13)
+* respondents engaged in .. activities on average (median = ..)
 preserve
 	keep if hours > 0
 	contract responseid, freq(responseid_freq)
@@ -161,11 +157,19 @@ restore
 tempfile tempdta
 save `tempdta', replace
 
+* Remove inconsistent answers from handcoded data
 import excel "data/temp/atus_3steps_openended/atus_3steps_open_ended_answers_handcoded.xls", sheet("Sheet1") firstrow clear
 merge 1:m responseid using `tempdta', nogen
 drop if quality == 0
 
-* Generate categories: 
+preserve
+	keep responseid
+	duplicates drop
+	count
+restore
+
+* GENERATE CATEGORIES
+
 * digital vs non-digital
 gen digital = 2 if product < 94 // leave out sleep,work,chores, other
 replace digital = 1 if inrange(product, 37, 43) | product == 53 | inrange(product, 59, 88) | product == 94
@@ -221,41 +225,38 @@ replace without = 100 if live_without == "Live without"
 label define withoutlbl 0 "World with" 100 "World without"
 label values without withoutlbl
 
-gen phone_apps = .
-replace phone_app = 1 if inlist(product, 71, 80, 82, 85)
-tab product if phone_app == 1
 
 ********** OUTPUT GRAPHS
 
 *** usage	
-//
-// graph hbar usage if digital == 1 & product < 89, ///
-// 	over(product, label(labsize(vsmall)) sort(1)) ///
-// 	ytitle(Usage (%), size(medium)) ///
-// 	ylabel(0(20)100, labsize(medlarge)) ///
-// 	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
-// 	xsize(10cm) ysize(15cm)
-// graph export "`png_stub'/usage_digital_by_product.png", width(1000) height(1500) replace	
-//
-// graph hbar usage if digital == 2, ///
-// 	over(product, label(labsize(vsmall)) sort(1)) ///
-// 	ytitle(Usage (%), size(medium)) ///
-// 	ylabel(0(20)100, labsize(medlarge)) ///
-// 	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
-// 	xsize(10cm) ysize(15cm)
-// graph export "`png_stub'/usage_nondigital_by_product.png", width(1000) height(1500) replace	
 
-****** HOURS
+graph hbar usage if digital == 1 & product < 89, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Usage (%), size(medium)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/usage_digital_by_product.png", width(1000) height(1500) replace	
+
+graph hbar usage if digital == 2, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Usage (%), size(medium)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/usage_nondigital_by_product.png", width(1000) height(1500) replace	
+
+****** hours
+
 keep if hours > 0
-codebook category
 egen product_freq = count(responseid), by(product)
+keep if product_freq > 20
 
-tab product if product_freq < 20
 drop if product > 994 // sleep, work, hh chores, other
 drop if product == 95 // we don't ask live without for running
 drop if product == 20 // weighlifting accidentally skipped in live without question
 
-br responseid product hours freetime without category digital_category social_media age_group 
+keep responseid product hours freetime without category digital digital_category social_media age_group 
 sort responseid
 
 egen hours_entered = sum(hours), by(responseid)
@@ -272,14 +273,14 @@ gen h_category_frac = (h_category / hours_entered) * 100
 gen h_dig_cat_frac = (h_dig_cat / hours_entered) * 100
 gen h_dig_sm_frac = (h_dig_sm / hours_entered) * 100
 
-br responseid product hours without hours_entered h_without h_without_frac
-sort responseid
+preserve
+	keep responseid
+	duplicates drop
+	count
+restore
 
-// keep responseid without freetime h_without h_without_frac
-// duplicates drop
-// egen sumhours = sum(h_without_frac), by(responseid)
+*** HOURS SPENT
 
-// keep if product_freq > 20
 graph hbar hours if digital == 1, ///
 	over(product, label(labsize(vsmall)) sort(1)) ///
 	ytitle(Daily time spent (hrs), size(medium)) ///
@@ -296,9 +297,11 @@ graph hbar hours if digital == 2, ///
 	xsize(10cm) ysize(15cm)
 graph export "`png_stub'/hours_nondigital_by_product.png", width(1000) height(1500) replace	
 
+* Those with more products appear more times, weight by inverse of frequency to equalize (?)
+egen total_count = count(responseid), by(responseid)
+gen weights = 1 / total_count 
 
-*** Averages
-cibar h_without, over(without) ///
+cibar h_without [pweight=weights], over(without) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 	ylabel(, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
@@ -306,35 +309,27 @@ cibar h_without, over(without) ///
 	barlabel(on) blposition(12) blsize(medlarge)
 graph export "`png_stub'/hours_by_without.png", replace	
 
-cibar h_without_frac, over(without) ///
-	gr(ytitle(Free time spent (%), size(medlarge)) ///
-	ylabel(, labsize(medlarge)) ///
-	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
-	legend(size(medlarge))) ///
-	barlabel(on) blposition(12) blsize(medlarge)
-graph export "`png_stub'/hours_frac_by_without.png", replace	
+// preserve
+// 	keep responseid h_category category
+// 	duplicates drop
+// 	cibar h_category, over(category) ///
+// 		gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
+// 		ylabel(, labsize(medlarge)) ///
+// 		xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+// 		legend(size(medsmall) rows(2))) ///
+// 		barlabel(on) blposition(12) blsize(medlarge)
+// 	graph export "hours_by_category.png", replace
+// restore 
 
-preserve
-	keep responseid h_category category
-	duplicates drop
-	cibar h_category [iweight=count_weight], over(category) ///
-		gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
-		ylabel(, labsize(medlarge)) ///
-		xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
-		legend(size(medsmall) rows(2))) ///
-		barlabel(on) blposition(12) blsize(medlarge)
-	graph export "`png_stub'/hours_by_category.png", replace
-restore 
-
-cibar h_category_frac, over(category) ///
+cibar h_category [pweight=weights], over(category) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 	ylabel(, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
-	legend(size(medsmall))) ///
+	legend(size(medsmall) rows(2))) ///
 	barlabel(on) blposition(12) blsize(medlarge)
-graph export "`png_stub'/hours_frac_by_category.png", replace
+graph export "`png_stub'/hours_by_category.png", replace
 
-cibar h_dig_cat, over(digital_category) ///
+cibar h_dig_cat [pweight=weights], over(digital_category) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 	ylabel(, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
@@ -342,15 +337,7 @@ cibar h_dig_cat, over(digital_category) ///
 	barlabel(on) blposition(12) blsize(medlarge)
 graph export "`png_stub'/hours_by_digital_category.png", replace
 
-cibar h_dig_cat_frac, over(digital_category) ///
-	gr(ytitle(Free time spent (%), size(medlarge)) ///
-	ylabel(, labsize(medlarge)) ///
-	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
-	legend(size(medium))) ///
-	barlabel(on) blposition(12) blsize(medlarge)
-graph export "`png_stub'/hours_frac_by_digital_category.png", replace
-
-cibar h_dig_cat, over(age_group digital_category) ///
+cibar h_dig_cat [pweight=weights], over(age_group digital_category) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 	ylabel(, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
@@ -358,15 +345,7 @@ cibar h_dig_cat, over(age_group digital_category) ///
 	barlabel(on) blposition(12) blsize(small)
 graph export "`png_stub'/hours_by_digital_category_age.png", replace
 
-cibar h_dig_cat_frac, over(age_group digital_category) ///
-	gr(ytitle(Free time spent (%), size(medlarge)) ///
-	ylabel(, labsize(medlarge)) ///
-	xlabel(, labsize(medlarge) valuelabel nogrid) ///
-	legend(size(medium))) ///
-	barlabel(on) blposition(12) blsize(small)
-graph export "`png_stub'/hours_frac_by_digital_category_age.png", replace	
-
-cibar h_without, over(age_group without) ///
+cibar h_without [pweight=weights], over(age_group without) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 	ylabel(, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
@@ -374,11 +353,145 @@ cibar h_without, over(age_group without) ///
 	barlabel(on) blposition(12) blsize(small)
 graph export "`png_stub'/hours_by_without_age.png", replace	
 
-cibar h_without_frac, over(age_group without) ///
-	gr(ytitle(Free time spent (%), size(medlarge)) ///
+* WITHOUT
+
+graph hbar without if digital == 1, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Prefers world without (%), size(medium)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/without_digital_by_product.png", width(1000) height(1500) replace	
+
+graph hbar without if digital == 2, ///
+	over(product, label(labsize(vsmall)) sort(1)) ///
+	ytitle(Prefers world without (%), size(medium)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	blabel(bar, position(6) gap(0) size(vsmall) format(%9.2f)) ///
+	xsize(10cm) ysize(15cm)
+graph export "`png_stub'/without_nondigital_by_product.png", width(1000) height(1500) replace	
+
+cibar without, over(digital) ///
+	gr(ytitle(Prefers world without (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
+graph export "`png_stub'/without_by_digital.png", replace	
+
+cibar without, over(category) ///
+	gr(ytitle(Prefers world without (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+	legend(size(medlarge) rows(2))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
+graph export "`png_stub'/without_by_category.png", replace	
+	
+cibar without if digital == 1, over(social_media) ///
+	gr(ytitle(Prefers world without (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/without_digital_by_sm.png", replace	
+
+cibar without if digital == 1, over(digital_category) ///
+	gr(ytitle(Prefers world without (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/without_digital_by_digitalcategory.png", replace
+
+cibar without, over(age_group digital) ///
+	gr(ytitle(Prefers world without (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medsmall)
+graph export "`png_stub'/without_by_digital_age.png", replace
+
+cibar without if digital == 1, over(age_group social_media) ///
+	gr(ytitle(Prefers world without (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medium)
+graph export "`png_stub'/without_by_sm_age.png", replace	
+	
+cibar without if digital == 1, over(age_group digital_category) ///
+	gr(ytitle(Prefers world without (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(vsmall)	
+graph export "`png_stub'/without_by_digitalcategory_age.png", replace	
+
+cibar without, over(age_group category) ///
+	gr(ytitle(Prefers world without (%), size(medlarge)) ///
+	ylabel(0(20)100, labsize(medlarge)) ///
+	xlabel(, labsize(small) angle(30) valuelabel nogrid) ///
+	legend(size(medsmall))) ///
+	barlabel(on) blposition(12) blsize(vsmall)	
+graph export "`png_stub'/without_by_category_age.png", replace
+
+* HOURS AMONG WITHOUT
+preserve
+
+	keep if without == 100
+	drop h_category h_dig_cat h_dig_sm
+	egen h_category = sum(hours), by(category responseid)
+	egen h_dig_cat = sum(hours) if digital == 1, by(digital_category responseid)
+	egen h_dig_sm = sum(hours) if digital == 1, by(social_media responseid)
+
+	cibar h_dig_cat [pweight=weights], over(age_group digital_category) ///
+		gr(ytitle("Daily time spent (hrs)" "among prefers world without", size(medlarge)) ///
+		ylabel(, labsize(medsmall)) ///
+		xlabel(, labsize(small) valuelabel nogrid) ///
+		legend(size(medium))) ///
+		barlabel(on) blposition(12) blsize(vsmall)
+	graph export "`png_stub'/hours_amongwithout_by_age_digitalcategory.png", replace	
+
+restore
+
+*FRACTION WITHOUT
+keep responseid without h_without_frac age_group
+duplicates drop
+
+preserve	
+	replace without = 1 if without == 0
+	egen total_without = total(without), by(responseid)
+	* If total_without = 101, response has both
+	drop if total_without == 101
+	keep responseid without
+	replace without = 0 if without == 100
+	replace without = 100 if without == 1
+	gen hours = 0
+	tempfile zerohours
+	save `zerohours'
+restore
+
+append using `zerohours'	
+sort responseid
+br
+replace h_without_frac = 0 if missing(h_without_frac)
+
+cibar h_without_frac, over(without) ///
+	gr(ytitle(Daily time spent (%), size(medlarge)) ///
+	ylabel(, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
+graph export "`png_stub'/hours_by_without_fraction.png", replace	
+
+sort responseid age_group
+bysort responseid (age_group): replace age_group = age_group[_n-1] if missing(age_group) 
+
+cibar h_without_frac, over(without age_group) ///
+	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 	ylabel(, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
-	legend(size(medium))) ///
-	barlabel(on) blposition(12) blsize(small)
-graph export "`png_stub'/hours_frac_by_without_age.png", replace	
-	
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medsmall)
+graph export "`png_stub'/hours_by_without_age_fraction.png", replace	
+
