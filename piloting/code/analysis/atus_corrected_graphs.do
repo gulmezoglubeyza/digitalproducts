@@ -41,13 +41,13 @@ preserve
 		barlabel(on) blposition(12) blsize(medlarge)
 	graph export "`png_stub'/hours_by_category.png", replace
 	
-	cibar hours, over(category age_group) ///
+	cibar hours, over(age_group category ) ///
 		gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 		ylabel(, labsize(medlarge)) ///
-		xlabel(, labsize(medlarge) valuelabel nogrid) ///
-		legend(size(medsmall) rows(2))) ///
-		barlabel(on) blposition(12) blsize(small)
-	graph export "`png_stub'/hours_by_category.png", replace
+		xlabel(, labsize(small) valuelabel nogrid angle(30)) ///
+		legend(size(medsmall) rows(1))) ///
+		barlabel(on) blposition(12) blsize(tiny)
+	graph export "`png_stub'/hours_by_category_age.png", replace
 
 restore
 
@@ -60,9 +60,9 @@ preserve
 		gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 		ylabel(, labsize(medlarge)) ///
 		xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
-		legend(size(medsmall) rows(2))) ///
+		legend(size(medlarge))) ///
 		barlabel(on) blposition(12) blsize(medlarge)
-	graph export "`png_stub'/hours_by_category.png", replace
+	graph export "`png_stub'/hours_by_digitalcategory.png", replace
 	
 	cibar hours, over(age_group digital_category) ///
 		gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
@@ -70,7 +70,7 @@ preserve
 		xlabel(, labsize(medlarge) valuelabel nogrid) ///
 		legend(size(medlarge))) ///
 		barlabel(on) blposition(12) blsize(small)
-	graph export "`png_stub'/hours_by_category_age.png", replace
+	graph export "`png_stub'/hours_by_digitalcategory_age.png", replace
 
 restore
 
@@ -81,7 +81,7 @@ use "data/temp/atus_3steps_corrected.dta", clear
 
 preserve
 
-	keep responseid
+	keep responseid age_group
 	duplicates drop
 	expand 2
 	bys responseid: gen without= _n
@@ -97,7 +97,7 @@ preserve
 	
 	collapse (sum) hours if !missing(without), by(responseid without age_group) 
 
-	merge 1:1 without responseid using `balcat'
+	merge 1:1 without responseid using `balcat', update
 	assert missing(hours) if _merge == 2
 	drop _merge
 
@@ -105,10 +105,7 @@ preserve
 	duplicates report responseid
 	tab without
 
-	replace hours = 0 if missing(hours)
-
-	bys responseid (age_group): replace age_group = age_group[_n-1] if missing(age_group)
-	
+	replace hours = 0 if missing(hours)	
 	* hours spent on live with vs without
 	
 	cibar hours, over(without) ///
@@ -125,7 +122,7 @@ preserve
 		xlabel(, labsize(medlarge) valuelabel nogrid) ///
 		legend(size(large))) ///
 		barlabel(on) blposition(12) blsize(medlarge)
-	graph export "`png_stub'/hours_by_without.png", replace	
+	graph export "`png_stub'/hours_by_without_age.png", replace	
 	
 	cibar hours if hours > 0, over(without) ///
 		gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
@@ -157,11 +154,13 @@ preserve
 
 restore 
 
-* Explaining difference between previous version: Previous code was overweighting those who used more products they wish did not exist
-/*
+* Explaining difference between previous version: Previous code was overweighting those who used more products they wish did not exist & not adding 0 for respondents that did not engage in any live with/without activities
+
 use "data/temp/atus_3steps_corrected.dta", clear
 drop if missing(without)
 egen h_without = sum(hours), by(without responseid)
+br responseid product without h_without
+sort responseid without
 
 cibar h_without, over(without) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
@@ -169,7 +168,7 @@ cibar h_without, over(without) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medlarge)
-*/
+graph export "`png_stub'/hours_by_without_weight_prod_freq.png", replace	
 
 ********************************************************************************
 *--------------------- LIVE WITHOUT (%) PER CATEGORY --------------------------*
@@ -183,7 +182,7 @@ drop if missing(without)
 egen product_count = count(responseid), by(product)
 drop if product_count < 20
 
-keep responseid age_group product without category digital_category
+keep responseid age_group product without category digital digital_category
 
 * By product
 graph hbar (mean)  without if digital == 1, ///
@@ -219,15 +218,15 @@ cibar without, over(digital_category) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medlarge)
-graph export "`png_stub'/without_by_category.png", replace
+graph export "`png_stub'/without_by_digitalcategory.png", replace
 
 cibar without, over(age_group digital_category) ///
 	gr(ytitle(Prefers world without (%), size(medlarge)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid) ///
 	legend(size(medlarge))) ///
-	barlabel(on) blposition(12) blsize(small)
-graph export "`png_stub'/without_by_category.png", replace			
+	barlabel(on) blposition(12) blsize(vsmall)
+graph export "`png_stub'/without_by_digitalcategory_age.png", replace			
 
 
 *TBD
