@@ -71,6 +71,7 @@ replace hours_20 = 0 if missing(hours_20)
 replace hours_95 = 0 if missing(hours_95)
 replace hours_995 = 0 if missing(hours_995)
 replace hours_996 = 0 if missing(hours_996)
+
 generate freetime_w_others = 24 - (hours_20 + hours_95 + hours_995 + hours_996 + hours_997 + hours_998 + hours_999) // remove activities that don't appear in live without
 sum freetime_w_others, d
 
@@ -230,7 +231,6 @@ replace without = 100 if live_without == "Live without"
 label define withoutlbl 0 "World with" 100 "World without"
 label values without withoutlbl
 
-
 ********** OUTPUT GRAPHS
 
 *** usage	
@@ -261,32 +261,10 @@ graph export "`png_stub'/usage_nondigital_by_product.png", width(1000) height(15
 drop if product > 994 // sleep, work, hh chores, other
 drop if product == 95 // we don't ask live without for running
 drop if product == 20 // weighlifting accidentally skipped in live without question
+drop if product == 48 // tobacco not categorized
 
 keep responseid product hours freetime* without category digital digital_category age_group 
-sort responseid
-
-egen hours_entered = sum(hours), by(responseid)
-
-* Total time spent per category
-egen h_without = sum(hours) if !missing(without), by(without responseid)
-egen h_category = sum(hours), by(category responseid)
-egen h_dig_cat = sum(hours) if digital == 1, by(digital_category responseid)
-
-* Fraction of free time per category
-// gen h_without_frac = (h_without / hours_entered) * 100
-// gen h_category_frac = (h_category / hours_entered) * 100
-// gen h_dig_cat_frac = (h_dig_cat / hours_entered) * 100
-
-// gen h_without_frac = (h_without / freetime_w_chore) * 100
-// gen h_category_frac = (h_category / freetime_w_chore) * 100
-// gen h_dig_cat_frac = (h_dig_cat / freetime_w_chore) * 100
-
-gen h_without_frac = (h_without / freetime_w_others) * 100
-gen h_category_frac = (h_category / freetime_w_others) * 100
-gen h_dig_cat_frac = (h_dig_cat / freetime_w_others) * 100
-
 sort responseid product
-br responseid product hours without h_without h_without_frac freetime_w_others
 
 preserve
 	keep responseid
@@ -294,6 +272,9 @@ preserve
 	count
 restore
 
+save "data/temp/atus_3steps_corrected.dta", replace
+
+/*
 *** HOURS SPENT
 
 graph hbar hours if digital == 1, ///
