@@ -61,13 +61,18 @@ rename hours_104 hours_996 // Other - 2
 destring hours*, replace
 tostring live_without*, replace
 
-generate freetime = 24 - (hours_997 + hours_998 + hours_999)
-sum freetime, d
+generate freetime_w_chores = 24 - (hours_997 + hours_998 + hours_999)
+sum freetime_w_chores, d
 
-generate freetime2 = 24 - (hours_997 + hours_998)
-sum freetime2, d
+generate freetime_wo_chores = 24 - (hours_997 + hours_998)
+sum freetime_wo_chores, d
 
-generate freetime3 = 24 - (hours_995 + hours_996 + hours_997 + hours_998 + hours_999)  // excludes 'other' categories)
+replace hours_20 = 0 if missing(hours_20)
+replace hours_95 = 0 if missing(hours_95)
+replace hours_995 = 0 if missing(hours_995)
+replace hours_996 = 0 if missing(hours_996)
+generate freetime_w_others = 24 - (hours_20 + hours_95 + hours_995 + hours_996 + hours_997 + hours_998 + hours_999) // remove activities that don't appear in live without
+sum freetime_w_others, d
 
 sum hours_997, d
 sum hours_998, d
@@ -124,7 +129,7 @@ preserve
 	* Low quality if they answered live without (meaning they engaged in activity) but entered 0 hours for activities other than the 'other' text boxes
 	keep if !missing(live_without) & hours == 0 & product < 995 
 	keep responseid product hours live_without
-	gen quality = 0 if !missing(live_without) & hours == 0 & product < 995
+	gen quality = 0 
 	keep responseid quality
 	duplicates drop // 103 respondents
 	tempfile qualitycheck
@@ -159,8 +164,10 @@ save `tempdta', replace
 
 * Remove inconsistent answers from handcoded data
 import excel "data/temp/atus_3steps_openended/atus_3steps_open_ended_answers_handcoded.xls", sheet("Sheet1") firstrow clear
-merge 1:m responseid using `tempdta', nogen
+keep responseid quality digitalmedia
+merge 1:m responseid using `tempdta', nogen keep(3)
 drop if quality == 0
+drop quality
 
 preserve
 	keep responseid
@@ -168,23 +175,21 @@ preserve
 	count
 restore
 
-* GENERATE CATEGORIES
+sort responseid product
+br
 
+
+* GENERATE CATEGORIES
 * digital vs non-digital
 gen digital = 2 if product < 94 // leave out sleep,work,chores, other
 replace digital = 1 if inrange(product, 37, 43) | product == 53 | inrange(product, 59, 88) | product == 94
 replace digital = 2 if product == 95 // running
 replace digital = 1 if product == 91 & digitalmedia == 1 // text for other media
+drop digitalmedia
 label define digitallbl 1 "Digital" 2 "Non-Digital"
 label values digital digitallbl
 
-* social media vs other digital
-gen social_media = 2 if digital == 1
-replace social_media = 1 if inlist(product, 67, 71, 72, 75, 77, 78, 80, 82, 84)
-label define smlbl 1 "Social media" 2 "Other Digital"
-label values social_media smlbl
-
-* other categories
+* categories
 gen category = .
 replace category = 1 if inrange(product, 1, 22)  | product == 89 | product == 95
 replace category = 2 if inrange(product, 23, 29) | product == 90
@@ -196,7 +201,7 @@ replace category = 7 if inrange(product, 37, 43) | product == 53 | inrange(produ
 label define categorylbl 1 "Sports/Exercise" 2 "Watching sports" 3 "Media&Entertainment" 4 "Social" 5 "Arts&Literature" 6 "Other Activities" 7 "Digital"  
 label values category categorylbl
 
-* other digital categories
+* digital categories
 gen digital_category = 0 if digital == 1
 replace digital_category = 1 if inlist(product, 67, 71, 72, 75, 77, 78, 80, 82, 84)
 replace digital_category = 2 if inlist(product, 68, 70, 79, 81, 85, 63)
@@ -248,30 +253,40 @@ graph export "`png_stub'/usage_nondigital_by_product.png", width(1000) height(15
 
 ****** hours
 
-keep if hours > 0
-egen product_freq = count(responseid), by(product)
-keep if product_freq > 20
+// keep if hours > 0
+
+// egen product_freq = count(responseid), by(product)
+// keep if product_freq > 20
 
 drop if product > 994 // sleep, work, hh chores, other
 drop if product == 95 // we don't ask live without for running
 drop if product == 20 // weighlifting accidentally skipped in live without question
 
-keep responseid product hours freetime without category digital digital_category social_media age_group 
+keep responseid product hours freetime* without category digital digital_category age_group 
 sort responseid
 
 egen hours_entered = sum(hours), by(responseid)
 
 * Total time spent per category
-egen h_without = sum(hours), by(without responseid)
+egen h_without = sum(hours) if !missing(without), by(without responseid)
 egen h_category = sum(hours), by(category responseid)
 egen h_dig_cat = sum(hours) if digital == 1, by(digital_category responseid)
-egen h_dig_sm = sum(hours) if digital == 1, by(social_media responseid)
 
 * Fraction of free time per category
-gen h_without_frac = (h_without / hours_entered) * 100
-gen h_category_frac = (h_category / hours_entered) * 100
-gen h_dig_cat_frac = (h_dig_cat / hours_entered) * 100
-gen h_dig_sm_frac = (h_dig_sm / hours_entered) * 100
+// gen h_without_frac = (h_without / hours_entered) * 100
+// gen h_category_frac = (h_category / hours_entered) * 100
+// gen h_dig_cat_frac = (h_dig_cat / hours_entered) * 100
+
+// gen h_without_frac = (h_without / freetime_w_chore) * 100
+// gen h_category_frac = (h_category / freetime_w_chore) * 100
+// gen h_dig_cat_frac = (h_dig_cat / freetime_w_chore) * 100
+
+gen h_without_frac = (h_without / freetime_w_others) * 100
+gen h_category_frac = (h_category / freetime_w_others) * 100
+gen h_dig_cat_frac = (h_dig_cat / freetime_w_others) * 100
+
+sort responseid product
+br responseid product hours without h_without h_without_frac freetime_w_others
 
 preserve
 	keep responseid
@@ -298,8 +313,8 @@ graph hbar hours if digital == 2, ///
 graph export "`png_stub'/hours_nondigital_by_product.png", width(1000) height(1500) replace	
 
 * Those with more products appear more times, weight by inverse of frequency to equalize (?)
-egen total_count = count(responseid), by(responseid)
-gen weights = 1 / total_count 
+// egen total_count = count(responseid), by(responseid)
+// gen weights = 1 / total_count 
 
 cibar h_without [pweight=weights], over(without) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
@@ -308,6 +323,13 @@ cibar h_without [pweight=weights], over(without) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medlarge)
 graph export "`png_stub'/hours_by_without.png", replace	
+
+cibar h_without_frac , over(without) ///
+	gr(ytitle(Daily time spent (%), size(medlarge)) ///
+	ylabel(, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
 
 // preserve
 // 	keep responseid h_category category
@@ -455,18 +477,19 @@ preserve
 restore
 
 *FRACTION WITHOUT
+keep if !missing(without)
 keep responseid without h_without_frac age_group
 duplicates drop
 
+* Add 0 hours to those with missing
 preserve	
+	egen count_response = count(responseid), by(responseid)
+	keep if count_response == 1
 	replace without = 1 if without == 0
-	egen total_without = total(without), by(responseid)
-	* If total_without = 101, response has both
-	drop if total_without == 101
-	keep responseid without
 	replace without = 0 if without == 100
 	replace without = 100 if without == 1
-	gen hours = 0
+	replace h_without_frac = 0
+	
 	tempfile zerohours
 	save `zerohours'
 restore
@@ -474,7 +497,10 @@ restore
 append using `zerohours'	
 sort responseid
 br
-replace h_without_frac = 0 if missing(h_without_frac)
+
+drop count_response
+egen count_response = count(responseid), by(responseid)
+tab count_response, m // check if each response has N=2
 
 cibar h_without_frac, over(without) ///
 	gr(ytitle(Daily time spent (%), size(medlarge)) ///
@@ -483,9 +509,6 @@ cibar h_without_frac, over(without) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medlarge)
 graph export "`png_stub'/hours_by_without_fraction.png", replace	
-
-sort responseid age_group
-bysort responseid (age_group): replace age_group = age_group[_n-1] if missing(age_group) 
 
 cibar h_without_frac, over(without age_group) ///
 	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
