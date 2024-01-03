@@ -6,7 +6,10 @@ local png_stub "output/figures/prolific/atus_3steps/corrected/"
 
 use "data/temp/atus_3steps_corrected.dta", clear
 * dataset is on the product x respondent level (92 X 182)
-*** HOURS SPENT
+
+********************************************************************************
+*-------------------------- HOURS SPENT PER CATEGORY --------------------------*
+********************************************************************************
 
 * By product
 graph hbar (mean) hours if digital == 1, ///
@@ -72,8 +75,9 @@ preserve
 restore
 
 
-* LIVE WITHOUT
+* Hours spent on live without
 use "data/temp/atus_3steps_corrected.dta", clear
+* Code below expands dataset to accommdate long data structure and have 2 entries per respondent (hours for live with & without)
 
 preserve
 
@@ -89,7 +93,7 @@ preserve
 
 restore
 
-// preserve 
+preserve 
 	
 	collapse (sum) hours if !missing(without), by(responseid without age_group) 
 
@@ -151,9 +155,10 @@ restore
 	graph export "`png_stub'/fraction_by_without_age.png", replace	
 
 
-// restore 
+restore 
 
-* Previous graph was overweighting those who used more products they wish did not exist
+* Explaining difference between previous version: Previous code was overweighting those who used more products they wish did not exist
+/*
 use "data/temp/atus_3steps_corrected.dta", clear
 drop if missing(without)
 egen h_without = sum(hours), by(without responseid)
@@ -164,11 +169,16 @@ cibar h_without, over(without) ///
 	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
 	legend(size(medlarge))) ///
 	barlabel(on) blposition(12) blsize(medlarge)
-	
+*/
+
+********************************************************************************
+*--------------------- LIVE WITHOUT (%) PER CATEGORY --------------------------*
+********************************************************************************
+
+* Only reports %s per product/category for live without question
 
 use "data/temp/atus_3steps_corrected.dta", clear
 
-* WITHOUT
 drop if missing(without)
 egen product_count = count(responseid), by(product)
 drop if product_count < 20
@@ -219,7 +229,9 @@ cibar without, over(age_group digital_category) ///
 	barlabel(on) blposition(12) blsize(small)
 graph export "`png_stub'/without_by_category.png", replace			
 
-* HOURS AMONG WITHOUT
+
+*TBD
+* Hours spent conditional on preferring world without
 
 use "data/temp/atus_3steps_corrected.dta", clear
 keep if without == 100
