@@ -1,0 +1,287 @@
+%\part{title}%2multibyte Version: 5.50.0.2960 CodePage: 65001
+% Page Format %
+\documentclass[11pt]{article}
+\renewcommand{\baselinestretch}{1.0}
+%\usepackage{setspace}
+\usepackage{eurosym}
+\usepackage{amsmath,amsthm,amssymb, pdfpages}
+\usepackage{color}
+\usepackage{array}
+\usepackage{gastex}
+\usepackage{titlesec} 
+\usepackage{epigraph} 
+\usepackage{multirow}
+\usepackage{bbm}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage[normalem]{ulem}
+\usepackage{xcolor,psfrag}
+\usepackage{natbib}
+\usepackage{pdflscape}
+\usepackage[multiple]{footmisc}
+\usepackage{enumerate}
+\usepackage{appendix}
+\usepackage[citecolor= black,
+			colorlinks=true,
+		    linkcolor = black,
+            urlcolor  = black]{hyperref}
+\usepackage{lscape}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{threeparttablex}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{makecell}
+\usepackage{bbm} 
+\usepackage{clipboard}
+\newclipboard{output-myclipboard}
+
+\makeatletter
+\let\TPT@hookin\@gobble
+\let\TPT@hookarg\@gobble
+\makeatother
+
+\usepackage{tablefootnote}
+
+%\usepackage[a4paper, total={7in, 9.5in}]{geometry}
+
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage{dsfont}
+
+% comment out for Ecma
+\usepackage{geometry}
+% comment in for Ecma
+%\usepackage[margin=1.5in]{geometry}
+
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup[table]{labelfont={bf}}
+\captionsetup[figure]{labelfont={bf}}
+\captionsetup{justification=centering}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.50.0.2960}
+%TCIDATA{Codepage=65001}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{LastRevised=Monday, May 29, 2017 08:21:34}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+
+
+ %%% comment out for Ecma:
+%\setlength{\evensidemargin}{0.0in}
+%\setlength{\oddsidemargin}{0.0in}
+%\setlength{\textwidth}{6.5in}
+%\topmargin -0.25in
+%\textheight 8.5in
+
+ \hfuzz=50pt
+ \pagestyle{plain}
+ 
+\newcommand{\eqthreshn}{{t^*_N}}
+\newcommand{\pnd}{1-p+pF(\eqthreshn)}
+\newcommand{\ppnd}{\big(1-p+pF(\eqthreshn)\big)}
+\newcommand{\eqmfreq}{{\omega^*}}
+\newcommand{\eqmfreqn}{{\omega^*_N}}
+\newcommand{\eqmfreqnp}{{\omega^*_{N+1}}}
+\newcommand{\eqthresh}{{t^*}}
+\newcommand{\eqthreshX}{{t^{**}}}
+\newcommand{\nbar}{{\overline{N}}}
+\newcommand{\wlim}{\omega_\infty}
+\newcommand{\wdye}{\hat{\omega}}
+\newcommand{\tdye}{\hat{t}}
+\newcommand{\limn}{\lim_{N\to\infty}}
+\newcommand{\fsn}{\omega_N^*}
+\newcommand{\eqprize}{\phi^*}
+\newcommand{\moprize}{\phi^M}
+\newcommand{\dif}{\;\mathrm{d}}
+\newcommand{\diffp}[2]{\frac{\partial #1}{\partial #2}}
+
+\newcommand{\noamph}{\emph}
+
+\newcommand{\newsection}[1]{\clearpage \setcounter{table}{0} \setcounter{figure}{0} \renewcommand{\thetable}{#1\arabic{table}} \renewcommand{\thefigure}{#1\arabic{figure}} }
+
+\newcommand{\diff}[2]{\frac{\dif #1}{\dif #2}}
+\renewcommand{\Re}{\mathbb{R}}                             
+\def\endproof{{\quad}$\blacksquare$}
+\newcommand{\indicator}[1]{\mathbbm{1}_{\left[ {#1} \right]}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{prop}{Proposition}
+\newtheorem{example}{Example}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+\newtheorem{condition}[theorem]{Condition}
+
+\newcommand{\Change}[1]{{\color{red}#1}}
+\renewcommand{\theenumi}{\roman{enumi}}            
+\renewcommand{\labelenumi}{(\theenumi)}
+
+\usepackage{titling} % to move the title upwards
+\setlength{\droptitle}{-6.5em} 
+
+\setcounter{table}{0} 
+\setcounter{figure}{0}
+
+%\input{tcilatex}
+
+\makeatletter
+\renewcommand\@biblabel[1]{}
+\makeatother
+	%\onehalfspacing
+\begin{document}
+%	\setstretch{1.25}
+
+
+
+\author{\textbf{Leonardo Bursztyn\thanks{University of Chicago and NBER, \texttt{bursztyn@uchicago.edu}}}
+\and \textbf{Rafael Jim\'{e}nez-Dur\'{a}n\thanks{Bocconi University, IGIER, and Chicago Booth Stigler Center, \texttt{rafael.jimenez@unibocconi.it}}}
+\and \textbf{Christopher Roth\thanks{University of Cologne, ECONtribute, Max Planck Institute for Collective Goods, briq, CESifo, and CEPR, \texttt{roth@wiso.uni-koeln.de}}}}
+
+
+% 
+% Digital Network Traps
+% The Digital Time Sink
+% Wasting Time in the Digital World
+
+\title{\textbf{Digital Discontent}\thanks{
+\footnotesize{We thank XXX as well as many seminar participants for useful comments. Roth acknowledges funding from the  Deutsche  Forschungsgemeinschaft  (DFG, German Research Foundation) under Germany’s Excellence Strategy EXC 2126/1-390838866. The research described in this article was approved by the University of Chicago Social and Behavioral Sciences Institutional Review Board }}}
+\date{\today}
+
+% and pre-registered in AsPredicted (\#137878, \#142247, and \#144630).
+
+\maketitle
+
+
+\thispagestyle {empty}\bigskip \vspace{-0.4in}
+
+\begin{center}
+\textbf{Abstract}
+\end{center}
+
+ 
+ 
+\begin{spacing}{1}
+\noindent How people spend their time has dramatically changed over the past decades. Digital products, ranging from social media platforms to instant messaging applications, increasingly dominate people's leisure time. In this paper, we analyze the welfare effects of a broad range of digital products using nationally representative samples from the US. The data showcases that people spend a lot of time using digital products that they wish did not exist. This is driven by social media platforms, which 27\% of active users wish did not exist, compared to 11\% for other digital products. Moreover, we see much lower levels of discontent for non-digital activities. Finally, our data highlights a strong generational divide in discontent with time use: On average, people under 25 spend more than 150 minutes daily on products they wish did not exist, compared to less than 60 minutes for people aged above 55.
+
+
+ 
+\end{spacing}
+ 
+
+\bigskip
+
+\noindent \textbf{Keywords:} Welfare; Digital Economy; Social Media; Time Use.\\\bigskip
+
+\noindent \textbf{JEL Classification:} D83, D91, P16, J15
+
+\bigskip \bigskip \bigskip \newpage
+
+\pagebreak
+
+
+\setcounter{page}{1}
+\begin{spacing}{1.2}
+
+\section{Introduction}\label{sec:introduction}
+% In an era marked by unprecedented digital connectivity, consumers worldwide have access to a variety of digital products. These products, ranging from social media platforms to instant messaging apps, have woven themselves into the fabric of daily life, aiming to offer convenience, community, and a plethora of information at our fingertips. 
+
+How Americans spend their time has dramatically changed over the past decades. Digital products, ranging from social media platforms to instant messaging applications, increasingly pervade Americans' leisure time. However, a growing literature highlights the potentially adverse welfare effects of such digital products, such as social media platforms \citep{bursztyn2023trap,allcott2022digital,braghieri2022social}.
+
+In this paper, we provide a systematic investigation of the welfare effects of different types of activities people spend their days on. 
+In our surveys, we first measure which types of products or activities people spend time on during their free time. Building on the validated welfare measures in \cite{bursztyn2023trap}, we then measure whether people prefer to live in a world with or without a given product or activity. Finally, we collect rich quantitative measures of how much time people spend on different activities. 
+
+\section{Survey Design}
+
+
+
+\end{spacing}
+
+\clearpage
+\begin{spacing}{1}
+\bibliographystyle{aer.bst}
+\normalsize \bibliography{bibfile.bib}
+\end{spacing}
+%\end{spacing}
+
+
+\clearpage
+
+\appendix
+
+
+\begin{center}
+\Huge \textbf{Online Appendix:\\Not for publication}
+\end{center}
+Our supplementary material is structured as follows. %Appendix~\ref{appsec:theory} provides proofs of all theoretical results.
+%Section \ref{appsec:model} provides additional details related to the conceptual framework. 
+%Section \ref{appsec:tables} includes additional tables and figures. Section \ref{appsec:robustness} provides additional evidence on robustness. 
+%Finally, Appendix~\ref{appsec:instructions} presents the instructions for all experiments described in the paper.
+
+\clearpage
+
+%%%% Appendix
+\renewcommand{\thetable}{A\arabic{table}}
+\renewcommand{\thefigure}{A\arabic{figure}}
+\renewcommand{\tablename}{Appendix Table} 
+\renewcommand{\figurename}{Appendix Figure}
+
+\setcounter{table}{0} 
+\setcounter{figure}{0}
+
+\section{Survey Instructions}
+
+\paragraph{Usage}
+
+How frequently did you use each of the following digital platforms/products in the past month?\\
+
+On average, how many minutes per day do you use [platform]?\\
+
+On average, how many days per month do you use [platform]?
+
+
+\paragraph{Welfare measurement}
+
+For each of the following digital platforms/products, would you prefer to live in a world with or without it?
+
+\paragraph{Self-Control}
+
+Which of the following two options do you prefer?
+\begin{itemize}
+    \item Live in a world where everyone including you can use [platform]
+    \item Live in a world where everyone excluding you can use [platform]
+\end{itemize}
+
+\paragraph{Network effects}
+
+To what extent do you agree with the following statement: The more my friends use [App], the more I want to use [App].
+
+\paragraph{WTA Keeping Network}
+
+What is the minimum payment you would require to quit using [platform] for four weeks?
+
+%\input{appendix_sections/framework_details}
+\clearpage
+
+%\input{appendix_sections/additional_exhibits}
+\clearpage
+
+%\input{appendix_sections/robustness}
+\clearpage
+
+%\input{appendix_sections/open_ended_responses}
+\clearpage
+
+%\input{appendix_sections/survey_instructions}
+
+
+\end{document}
+
