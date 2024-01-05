@@ -106,8 +106,16 @@ preserve
 	tab without
 
 	replace hours = 0 if missing(hours)	
-	* hours spent on live with vs without
 	
+	gen hours0 = hours == 0
+	tab hours0 if without == 100 //51.65% spend 0 hours on things they wish did not exist
+	
+	hist hours if without == 100 & hours > 0, ///
+		percent ylabel(,grid) xlabel(0(0.5)13) ///
+		width(0.5)
+	graph export "`png_stub'/hist_without_hours.png", replace
+	
+	* hours spent on live with vs without
 	cibar hours, over(without) ///
 		gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
 		ylabel(, labsize(medlarge)) ///
@@ -130,6 +138,15 @@ preserve
 		xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
 		legend(size(medlarge))) ///
 		barlabel(on) blposition(12) blsize(medlarge)
+	graph export "`png_stub'/hours_by_without_nozero.png", replace	
+	
+	cibar hours if hours > 0, over(without age_group) ///
+		gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
+		ylabel(, labsize(medlarge)) ///
+		xlabel(, labsize(medlarge) valuelabel nogrid) ///
+		legend(size(medlarge))) ///
+		barlabel(on) blposition(12) blsize(medlarge)
+	graph export "`png_stub'/hours_by_without_age_nozero.png", replace	
 	
 	* fraction of time spent on live with vs without
 	bys responseid: egen resp_hours = total(hours)
@@ -151,6 +168,19 @@ preserve
 		barlabel(on) blposition(12) blsize(medsmall)
 	graph export "`png_stub'/fraction_by_without_age.png", replace	
 
+	keep if without == 100
+	sort timeshare
+	
+	sum timeshare if timeshare > 0, d
+	
+	xtile decile = timeshare, nq(10)
+	
+	cibar hours, over(without decile) ///
+		gr(ytitle(Daily time spent (%), size(medlarge)) ///
+		ylabel(, labsize(medlarge)) ///
+		xlabel(, labsize(medlarge) valuelabel nogrid) ///
+		legend(size(medlarge))) ///
+		barlabel(on) blposition(12) blsize(medlarge)
 
 restore 
 
@@ -170,6 +200,13 @@ cibar h_without, over(without) ///
 	barlabel(on) blposition(12) blsize(medlarge)
 graph export "`png_stub'/hours_by_without_weight_prod_freq.png", replace	
 
+cibar h_without, over(without age_group) ///
+	gr(ytitle(Daily time spent (hrs), size(medlarge)) ///
+	ylabel(, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
+
 ********************************************************************************
 *--------------------- LIVE WITHOUT (%) PER CATEGORY --------------------------*
 ********************************************************************************
@@ -185,7 +222,7 @@ drop if product_count < 20
 keep responseid age_group product without category digital digital_category
 
 * By product
-graph hbar (mean)  without if digital == 1, ///
+graph hbar (mean) without if digital == 1, ///
 	over(product, label(labsize(vsmall)) sort(1)) ///
 	ytitle(Prefers world without (%), size(medium)) ///
 	ylabel(0(20)100, labsize(medlarge)) ///
@@ -233,9 +270,49 @@ graph export "`png_stub'/without_by_digitalcategory_age.png", replace
 * Hours spent conditional on preferring world without
 
 use "data/temp/atus_3steps_corrected.dta", clear
+br responseid product without hours category digital_category
+tab without, m
+tab without
+
 keep if without == 100
-egen count_product = count(responseid), by(product)
-drop if count_product < 20
+tab digital 
+tab digital_category
+
+// bys responseid: egen resp_hours = total(hours)
+// bys responseid digital_category: egen digital_hours = total(hours) 
+
+collapse (sum) hours, by(responseid age_group digital_category)
+
+bys responseid: egen resp_hours = total(hours)
+sum resp_hours
+gen timeshare = hours/resp_hours * 100
+
+// cibar hours, over(digital_category)
+// cibar timeshare, over(digital_category)
+// cibar timeshare, over(digital_category age_group)
+
+cibar timeshare, over(digital_category) ///
+	gr(ytitle(Daily time spent (%), size(medlarge)) ///
+	ylabel(, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
+graph export "`png_stub'/conditionalwithout_timeshare_digitalcategory.png", replace			
+
+egen total_hours = total(hours)
+bys digital_category: egen total_hours_category = total(hours) if !missing(digital_category)
+gen share_hours_digcat = total_hours_category / total_hours *100
+
+cibar share_hours_digcat, over(digital_category) ///
+	gr(ytitle(Daily time spent (%), size(medlarge)) ///
+	ylabel(, labsize(medlarge)) ///
+	xlabel(, labsize(medlarge) valuelabel nogrid angle(45)) ///
+	legend(size(medlarge))) ///
+	barlabel(on) blposition(12) blsize(medlarge)
+graph export "`png_stub'/conditionalwithout_total_timeshare_digitalcategory.png", replace		
+
+// egen count_product = count(responseid), by(product)
+// drop if count_product < 20
 * Not enough data yet
 /*
 // preserve

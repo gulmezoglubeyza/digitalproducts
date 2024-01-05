@@ -139,6 +139,12 @@ restore
 
 merge m:1 responseid using `qualitycheck', nogen
 
+preserve
+	keep responseid
+	duplicates drop
+	count
+restore
+
 br responseid product hours live_without quality 
 drop if quality == 0
 
