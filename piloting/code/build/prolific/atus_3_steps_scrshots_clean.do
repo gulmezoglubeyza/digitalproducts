@@ -2,7 +2,7 @@ clear all
 label drop _all
 
 ***** Load and prepare
-insheet using "/Users/leolab/Downloads/atus-3steps-scrshots_January 5, 2024_12.02.csv", names clear
+insheet using "/Users/leolab/Downloads/atus-3steps-scrshots_January 7, 2024_22.17.csv", names clear
 count
 
 drop in 1/2
@@ -181,7 +181,11 @@ label_products
 gen hours = primary_hours
 replace hours = hours + secondary_hours if !missing(secondary_hours)
 
-drop primary_hours secondary_hours
+sum primary_hours, d
+sum secondary_hours, d
+sum hours, d
+
+// drop primary_hours secondary_hours
 
 * Check if survey logic worked properly:
 * Nothing should show up other than 'other'
@@ -192,31 +196,29 @@ preserve
 	tab product // only 'other' categories are not asked in live without and asked in time allocation
 restore
 
-
 * COMMENT IN
-// preserve 
-// 	* Low quality if they answered live without (meaning they engaged in activity) but entered 0 hours for activities other than the 'other' text box in the live without question
-// 	br responseid product live_without hours if !missing(live_without) & hours == 0 & product < 996 
-// 	keep if !missing(live_without) & hours == 0 & product < 996 
-// 	keep responseid product hours live_without
-// 	gen quality = 0 
-// 	keep responseid quality
-// 	duplicates drop // 103 respondents
-// 	tempfile qualitycheck
-// 	save `qualitycheck', replace
-// restore 
+preserve 
+	* Low quality if they answered live without (meaning they engaged in activity) but entered 0 hours for activities other than the 'other' text box in the live without question
+	br responseid product live_without hours if !missing(live_without) & hours == 0 & product < 996 
+	keep if !missing(live_without) & hours == 0 & product < 996 
+	keep responseid product hours live_without
+	gen quality = 0 
+	keep responseid quality
+	duplicates drop 
+	tempfile qualitycheck
+	save `qualitycheck', replace
+restore 
 
-// merge m:1 responseid using `qualitycheck', nogen
+merge m:1 responseid using `qualitycheck', nogen
 
-// preserve
-// 	keep responseid
-// 	duplicates drop
-// 	count
-// restore
-//
-// br responseid product hours live_without quality 
-// drop if quality == 0
+preserve
+	keep responseid
+	duplicates drop
+	count
+restore
 
+br responseid product hours live_without quality 
+drop if quality == 0
 
 drop if product > 995 // remove other, sleep, work, hh chores
 tab product
