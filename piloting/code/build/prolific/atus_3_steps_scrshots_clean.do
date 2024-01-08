@@ -14,7 +14,7 @@ Remaining N=142
 
 */
 ***** Load and prepare
-insheet using "/Users/leolab/Downloads/atus-3steps-scrshots_January 7, 2024_22.17.csv", names clear
+insheet using "data/raw/prolific/atus_3steps_scrshots/atus-3steps-scrshots_January 7, 2024_22.17.csv", names clear
 count
 
 drop in 1/2
